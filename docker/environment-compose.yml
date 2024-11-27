@@ -20,6 +20,25 @@ services:
       interval: 3s
       timeout: 5s
 
+  liquibase:
+    image: liquibase/liquibase:4.25
+    container_name: liquibase
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command:
+      - --changelog-file=db.changelog-master.yml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://${POSTGRES_CONTAINER_NAME}:5432/${POSTGRES_DB}
+      - --username=${POSTGRES_USER}
+      - --password=${POSTGRES_PASSWORD}
+      - update
+    volumes:
+      - ../migrations/db/changelog:/liquibase/changelog/
+    networks:
+      - backend
+
 volumes:
   postgresql: { }
 

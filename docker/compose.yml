@@ -20,5 +20,7 @@ services:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       POSTGRES_HOST: postgres
     depends_on:
+      liquibase:
+        condition: service_completed_successfully
       postgres:
         condition: service_healthy
