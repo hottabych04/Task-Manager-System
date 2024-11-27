@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS t_role
 CREATE TABLE IF NOT EXISTS t_role_to_user
 (
     id      SERIAL,
-    id_role INT REFERENCES t_role (id),
-    id_user BIGINT REFERENCES t_user (id),
+    id_role INT    NOT NULL REFERENCES t_role (id),
+    id_user BIGINT NOT NULL REFERENCES t_user (id),
 
     PRIMARY KEY (id)
 );
@@ -51,11 +51,11 @@ CREATE TABLE IF NOT EXISTS t_priority
 CREATE TABLE IF NOT EXISTS t_task
 (
     id            BIGSERIAL,
-    c_name        TEXT NOT NULL,
+    c_name        TEXT   NOT NULL,
     c_description TEXT,
-    id_status     INT REFERENCES t_status (id),
-    id_priority   INT REFERENCES t_priority (id),
-    id_author     BIGINT REFERENCES t_user (id),
+    id_status     INT    NOT NULL REFERENCES t_status (id),
+    id_priority   INT    NOT NULL REFERENCES t_priority (id),
+    id_author     BIGINT NOT NULL REFERENCES t_user (id),
 
     PRIMARY KEY (id)
 );
@@ -64,9 +64,9 @@ CREATE TABLE IF NOT EXISTS t_task
 CREATE TABLE IF NOT EXISTS t_comment
 (
     id        BIGSERIAL,
-    c_message TEXT NOT NULL,
-    id_author BIGINT REFERENCES t_user (id),
-    id_task   BIGINT REFERENCES t_task (id),
+    c_message TEXT   NOT NULL,
+    id_author BIGINT NOT NULL REFERENCES t_user (id),
+    id_task   BIGINT NOT NULL REFERENCES t_task (id),
 
     PRIMARY KEY (id)
 );
@@ -75,8 +75,8 @@ CREATE TABLE IF NOT EXISTS t_comment
 CREATE TABLE IF NOT EXISTS t_user_to_task
 (
     id      BIGSERIAL,
-    id_user BIGINT REFERENCES t_user (id),
-    id_task BIGINT REFERENCES t_task (id),
+    id_user BIGINT NOT NULL REFERENCES t_user (id),
+    id_task BIGINT NOT NULL REFERENCES t_task (id),
 
     PRIMARY KEY (id)
 );
