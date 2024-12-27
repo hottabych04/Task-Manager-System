@@ -3,10 +3,13 @@ package com.hottabych04.app.configuration.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hottabych04.app.service.jwt.entity.Token;
 import com.hottabych04.app.service.jwt.entity.Tokens;
+import com.hottabych04.app.service.jwt.factory.AccessTokenFactory;
+import com.hottabych04.app.service.jwt.factory.RefreshTokenFactory;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Setter;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -19,16 +22,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.Objects;
 import java.util.function.Function;
 
+@Setter
 public class RequestJwtTokensFilter extends OncePerRequestFilter {
 
     private RequestMatcher requestMatcher = new AntPathRequestMatcher("/jwt/tokens", HttpMethod.POST.name());
 
-    private Function<Token, Token> accessTokenFactory;
-    private Function<Authentication, Token> refreshTokenFactory;
-    private Function<Token, String> accessTokenJwsSerializer;
-    private Function<Token, String> refreshTokenJweSerializer;
+    private Function<Token, Token> accessTokenFactory = new AccessTokenFactory();
+    private Function<Authentication, Token> refreshTokenFactory = new RefreshTokenFactory();
+    private Function<Token, String> accessTokenJwsSerializer = Objects::toString;
+    private Function<Token, String> refreshTokenJweSerializer = Objects::toString;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
