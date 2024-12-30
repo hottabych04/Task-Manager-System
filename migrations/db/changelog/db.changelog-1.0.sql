@@ -11,6 +11,15 @@ CREATE TABLE IF NOT EXISTS t_user
 );
 
 --changeset hottabych04:2
+CREATE TABLE IF NOT EXISTS t_deactivated_token
+(
+    id UUID,
+    c_keep_until TIMESTAMP NOT NULL CHECK ( c_keep_until > now() ),
+
+    PRIMARY KEY (id)
+);
+
+--changeset hottabych04:3
 CREATE TABLE IF NOT EXISTS t_role
 (
     id     SERIAL,
@@ -19,7 +28,7 @@ CREATE TABLE IF NOT EXISTS t_role
     PRIMARY KEY (id)
 );
 
---changeset hottabych04:3
+--changeset hottabych04:4
 CREATE TABLE IF NOT EXISTS t_role_to_user
 (
     id      SERIAL,
@@ -29,7 +38,7 @@ CREATE TABLE IF NOT EXISTS t_role_to_user
     PRIMARY KEY (id)
 );
 
---changeset hottabych04:4
+--changeset hottabych04:5
 CREATE TABLE IF NOT EXISTS t_status
 (
     id     SERIAL,
@@ -38,7 +47,7 @@ CREATE TABLE IF NOT EXISTS t_status
     PRIMARY KEY (id)
 );
 
---changeset hottabych04:5
+--changeset hottabych04:6
 CREATE TABLE IF NOT EXISTS t_priority
 (
     id     SERIAL,
@@ -47,7 +56,7 @@ CREATE TABLE IF NOT EXISTS t_priority
     PRIMARY KEY (id)
 );
 
---changeset hottabych04:6
+--changeset hottabych04:7
 CREATE TABLE IF NOT EXISTS t_task
 (
     id            BIGSERIAL,
@@ -60,7 +69,7 @@ CREATE TABLE IF NOT EXISTS t_task
     PRIMARY KEY (id)
 );
 
---changeset hottabych04:7
+--changeset hottabych04:8
 CREATE TABLE IF NOT EXISTS t_comment
 (
     id        BIGSERIAL,
@@ -71,7 +80,7 @@ CREATE TABLE IF NOT EXISTS t_comment
     PRIMARY KEY (id)
 );
 
---changeset hottabych04:8
+--changeset hottabych04:9
 CREATE TABLE IF NOT EXISTS t_user_to_task
 (
     id      BIGSERIAL,
