@@ -1,6 +1,6 @@
-package com.hottabych04.app.service.jwt.converter;
+package com.hottabych04.app.service.security.jwt.converter;
 
-import com.hottabych04.app.service.jwt.entity.Token;
+import com.hottabych04.app.service.security.jwt.entity.Token;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

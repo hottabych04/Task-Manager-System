@@ -1,10 +1,10 @@
-package com.hottabych04.app.configuration.jwt;
+package com.hottabych04.app.service.security.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hottabych04.app.service.jwt.entity.Token;
-import com.hottabych04.app.service.jwt.entity.Tokens;
-import com.hottabych04.app.service.jwt.factory.AccessTokenFactory;
-import com.hottabych04.app.service.jwt.factory.RefreshTokenFactory;
+import com.hottabych04.app.service.security.jwt.entity.Token;
+import com.hottabych04.app.service.security.jwt.entity.Tokens;
+import com.hottabych04.app.service.security.jwt.factory.AccessTokenFactory;
+import com.hottabych04.app.service.security.jwt.factory.RefreshTokenFactory;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +41,7 @@ public class RequestJwtTokensFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (this.requestMatcher.matches(request)){
             SecurityContext context = SecurityContextHolder.getContext();
-            if (context != null && (context.getAuthentication() instanceof PreAuthenticatedAuthenticationToken)){
+            if (context != null && !(context.getAuthentication() instanceof PreAuthenticatedAuthenticationToken)){
                 Token refreshToken = refreshTokenFactory.apply(context.getAuthentication());
                 Token accessToken = accessTokenFactory.apply(refreshToken);
 
@@ -51,7 +51,7 @@ public class RequestJwtTokensFilter extends OncePerRequestFilter {
                 Tokens tokens = new Tokens(
                         this.accessTokenJwsSerializer.apply(accessToken),
                         accessToken.expiredAt().toString(),
-                        this.refreshTokenJweSerializer.apply(accessToken),
+                        this.refreshTokenJweSerializer.apply(refreshToken),
                         refreshToken.expiredAt().toString()
                 );
 
@@ -59,6 +59,8 @@ public class RequestJwtTokensFilter extends OncePerRequestFilter {
                         response.getWriter(),
                         tokens
                 );
+
+                return;
             }
 
             throw new AccessDeniedException("User must be authenticated");

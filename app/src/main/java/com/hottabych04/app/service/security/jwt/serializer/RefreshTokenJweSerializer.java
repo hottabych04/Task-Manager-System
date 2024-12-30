@@ -1,6 +1,6 @@
-package com.hottabych04.app.service.jwt.serializer;
+package com.hottabych04.app.service.security.jwt.serializer;
 
-import com.hottabych04.app.service.jwt.entity.Token;
+import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.nimbusds.jose.*;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -12,7 +12,7 @@ public class RefreshTokenJweSerializer implements Function<Token, String> {
 
     private JWEEncrypter jweEncrypter;
     private JWEAlgorithm jweAlgorithm = JWEAlgorithm.DIR;
-    private EncryptionMethod encryptionMethod = EncryptionMethod.A128GCM;
+    private EncryptionMethod encryptionMethod = EncryptionMethod.A192GCM;
 
     public RefreshTokenJweSerializer(JWEEncrypter jweEncrypter) {
         this.jweEncrypter = jweEncrypter;

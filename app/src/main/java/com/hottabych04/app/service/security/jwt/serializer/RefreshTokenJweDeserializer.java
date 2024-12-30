@@ -1,14 +1,16 @@
-package com.hottabych04.app.service.jwt.serializer;
+package com.hottabych04.app.service.security.jwt.serializer;
 
-import com.hottabych04.app.service.jwt.entity.Token;
+import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jwt.EncryptedJWT;
+import lombok.AllArgsConstructor;
 
 import java.text.ParseException;
 import java.util.UUID;
 import java.util.function.Function;
 
+@AllArgsConstructor
 public class RefreshTokenJweDeserializer implements Function<String, Token> {
 
     private JWEDecrypter jweDecrypter;

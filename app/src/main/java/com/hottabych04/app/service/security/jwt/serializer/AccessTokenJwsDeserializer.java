@@ -1,6 +1,6 @@
-package com.hottabych04.app.service.jwt.serializer;
+package com.hottabych04.app.service.security.jwt.serializer;
 
-import com.hottabych04.app.service.jwt.entity.Token;
+import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jwt.SignedJWT;

@@ -1,6 +1,6 @@
-package com.hottabych04.app.service.jwt.factory;
+package com.hottabych04.app.service.security.jwt.factory;
 
-import com.hottabych04.app.service.jwt.entity.Token;
+import com.hottabych04.app.service.security.jwt.entity.Token;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
