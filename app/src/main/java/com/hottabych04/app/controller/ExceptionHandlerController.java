@@ -13,7 +13,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(TaskManagerRuntimeException.class)
     public ProblemDetail handleTaskManagerException(TaskManagerRuntimeException e){
         return ProblemDetail.forStatusAndDetail(
-                HttpStatus.SERVICE_UNAVAILABLE,
+                HttpStatus.BAD_REQUEST,
                 e.getMessage()
         );
     }
