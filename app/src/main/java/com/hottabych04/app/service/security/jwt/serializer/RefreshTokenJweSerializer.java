@@ -1,13 +1,16 @@
 package com.hottabych04.app.service.security.jwt.serializer;
 
+import com.hottabych04.app.exception.token.TokenSerializeException;
 import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.nimbusds.jose.*;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Date;
 import java.util.function.Function;
 
+@Log4j2
 public class RefreshTokenJweSerializer implements Function<Token, String> {
 
     private JWEEncrypter jweEncrypter;
@@ -37,7 +40,8 @@ public class RefreshTokenJweSerializer implements Function<Token, String> {
 
             return encryptedJWT.serialize();
         } catch (JOSEException e) {
-            throw new RuntimeException(e);
+            log.error("Value not serialize to refresh token");
+            throw new TokenSerializeException("Problem with create refresh token");
         }
     }
 }

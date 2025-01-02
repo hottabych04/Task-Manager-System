@@ -5,11 +5,13 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jwt.EncryptedJWT;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.text.ParseException;
 import java.util.UUID;
 import java.util.function.Function;
 
+@Log4j2
 @AllArgsConstructor
 public class RefreshTokenJweDeserializer implements Function<String, Token> {
 
@@ -31,7 +33,7 @@ public class RefreshTokenJweDeserializer implements Function<String, Token> {
                     jwtClaimsSet.getExpirationTime().toInstant()
             );
         } catch (ParseException | JOSEException e) {
-            System.out.println("Error decrypt");
+            log.error("Value not deserialize to refresh token");
         }
 
         return null;

@@ -1,5 +1,6 @@
 package com.hottabych04.app.service.security.jwt.serializer;
 
+import com.hottabych04.app.exception.token.TokenSerializeException;
 import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -8,10 +9,12 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Date;
 import java.util.function.Function;
 
+@Log4j2
 public class AccessTokenJwsSerializer implements Function<Token, String> {
 
     private JWSSigner jwsSigner;
@@ -48,7 +51,8 @@ public class AccessTokenJwsSerializer implements Function<Token, String> {
 
             return signedJWT.serialize();
         } catch (JOSEException e) {
-            throw new RuntimeException(e);
+            log.error("Value not serialize to access token");
+            throw new TokenSerializeException("Problem with create access token");
         }
 
     }

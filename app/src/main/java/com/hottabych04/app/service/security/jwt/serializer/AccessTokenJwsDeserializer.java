@@ -5,11 +5,13 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.text.ParseException;
 import java.util.UUID;
 import java.util.function.Function;
 
+@Log4j2
 @RequiredArgsConstructor
 public class AccessTokenJwsDeserializer implements Function<String, Token> {
 
@@ -31,7 +33,7 @@ public class AccessTokenJwsDeserializer implements Function<String, Token> {
                 );
             }
         } catch (ParseException | JOSEException e) {
-            System.out.println("Error verify signed JWT");
+            log.error("Value not deserialize to access token");
         }
 
         return null;
