@@ -1,5 +1,8 @@
 package com.hottabych04.app.exception;
 
+import lombok.Getter;
+
+@Getter
 public class EntityNotFoundException extends TaskManagerRuntimeException{
 
     private final String entityDetail;
