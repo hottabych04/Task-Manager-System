@@ -2,6 +2,7 @@ ext{
     versions = [
             'lombok': '1.18.32',
             'testcontainers': '1.20.0',
-            'jwt': '9.47'
+            'jwt': '9.47',
+            'mapstruct': '1.6.3'
     ]
 }
