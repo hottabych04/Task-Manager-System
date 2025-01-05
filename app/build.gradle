@@ -7,7 +7,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation "com.nimbusds:nimbus-jose-jwt:${versions.jwt}"
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
-    implementation "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
     implementation 'org.postgresql:postgresql'
     implementation 'org.liquibase:liquibase-core'
 
