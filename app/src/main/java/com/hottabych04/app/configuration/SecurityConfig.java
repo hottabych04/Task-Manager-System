@@ -34,7 +34,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
-                                .anyRequest().authenticated()
+                                .anyRequest().hasAnyRole("ADMIN", "USER")
                 )
                 .build();
     }

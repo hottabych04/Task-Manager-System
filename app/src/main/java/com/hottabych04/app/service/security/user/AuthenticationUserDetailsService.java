@@ -1,4 +1,4 @@
-package com.hottabych04.app.service.security;
+package com.hottabych04.app.service.security.user;
 
 import com.hottabych04.app.database.repository.UserRepository;
 import com.hottabych04.app.exception.user.UserNotFoundException;
