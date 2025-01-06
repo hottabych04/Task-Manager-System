@@ -1,5 +1,6 @@
 package com.hottabych04.app.controller.user;
 
+import com.hottabych04.app.controller.user.payload.UserCreateDto;
 import com.hottabych04.app.controller.user.payload.UserGetDto;
 import com.hottabych04.app.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+
+    @PostMapping
+    public UserGetDto createUser(@RequestBody UserCreateDto user){
+        return userService.createUser(user);
+    }
 
     @GetMapping("/{id}")
     public UserGetDto getUser(@PathVariable Long id){
