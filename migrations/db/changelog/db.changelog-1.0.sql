@@ -63,8 +63,8 @@ CREATE TABLE IF NOT EXISTS t_task
     c_name        TEXT   NOT NULL,
     c_description TEXT,
     id_status     INT    NOT NULL REFERENCES t_status (id),
-    id_priority   INT    NOT NULL REFERENCES t_priority (id),
     id_author     BIGINT NOT NULL REFERENCES t_user (id),
+    id_priority   INT REFERENCES t_priority (id),
 
     PRIMARY KEY (id)
 );
@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS t_comment
     id_author    BIGINT    NOT NULL REFERENCES t_user (id),
     id_task      BIGINT    NOT NULL REFERENCES t_task (id),
     c_created_at TIMESTAMP NOT NULL,
+
     PRIMARY KEY (id)
 );
 

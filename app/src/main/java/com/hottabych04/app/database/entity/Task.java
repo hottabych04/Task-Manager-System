@@ -29,7 +29,7 @@ public class Task {
     @JoinColumn(name = "id_status")
     private Status status;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "id_priority")
     private Priority priority;
 
