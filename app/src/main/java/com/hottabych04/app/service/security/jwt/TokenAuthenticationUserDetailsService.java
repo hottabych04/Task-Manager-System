@@ -1,6 +1,7 @@
 package com.hottabych04.app.service.security.jwt;
 
 import com.hottabych04.app.database.repository.DeactivatedTokenRepository;
+import com.hottabych04.app.database.repository.UserRepository;
 import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.hottabych04.app.service.security.jwt.entity.TokenUser;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ public class TokenAuthenticationUserDetailsService
 
     private final DeactivatedTokenRepository deactivatedTokenRepository;
 
+    private final UserRepository userRepository;
+
     @Override
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken authenticationToken)
             throws UsernameNotFoundException {
@@ -28,7 +31,7 @@ public class TokenAuthenticationUserDetailsService
                     true,
                     !deactivatedTokenRepository.existsById(token.id()) && token.expiredAt().isAfter(Instant.now()),
                     token.expiredAt().isAfter(Instant.now()),
-                    true,
+                    userRepository.existsByEmail(token.login()),
                     token.authorities().stream()
                             .map(SimpleGrantedAuthority::new)
                             .toList(),

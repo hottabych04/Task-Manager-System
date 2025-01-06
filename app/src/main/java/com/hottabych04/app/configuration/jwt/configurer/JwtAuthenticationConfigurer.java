@@ -1,5 +1,6 @@
 package com.hottabych04.app.configuration.jwt.configurer;
 
+import com.hottabych04.app.database.repository.UserRepository;
 import com.hottabych04.app.service.security.jwt.filter.JwtLogoutFilter;
 import com.hottabych04.app.service.security.jwt.filter.RefreshJwtTokenFilter;
 import com.hottabych04.app.service.security.jwt.filter.RequestJwtTokensFilter;
@@ -32,6 +33,8 @@ public class JwtAuthenticationConfigurer extends AbstractHttpConfigurer<JwtAuthe
 
     private Function<String, Token> refreshTokenDeserializer;
 
+    private UserRepository userRepository;
+
     private DeactivatedTokenRepository deactivatedTokenRepository;
 
     @Override
@@ -49,7 +52,9 @@ public class JwtAuthenticationConfigurer extends AbstractHttpConfigurer<JwtAuthe
         requestJwtTokensFilter.setRefreshTokenJweSerializer(this.refreshTokenJweSerializer);
 
         var authenticationProvider = new PreAuthenticatedAuthenticationProvider();
-        authenticationProvider.setPreAuthenticatedUserDetailsService(new TokenAuthenticationUserDetailsService(deactivatedTokenRepository));
+        authenticationProvider.setPreAuthenticatedUserDetailsService(
+                new TokenAuthenticationUserDetailsService(this.deactivatedTokenRepository, this.userRepository)
+        );
 
         var jwtAuthenticationFilter = new AuthenticationFilter(
                 new ProviderManager(authenticationProvider),
@@ -88,6 +93,11 @@ public class JwtAuthenticationConfigurer extends AbstractHttpConfigurer<JwtAuthe
 
     public JwtAuthenticationConfigurer refreshTokenDeserializer(Function<String, Token> refreshTokenDeserializer) {
         this.refreshTokenDeserializer = refreshTokenDeserializer;
+        return this;
+    }
+
+    public JwtAuthenticationConfigurer userRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
         return this;
     }
 

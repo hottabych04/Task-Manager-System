@@ -2,6 +2,7 @@ package com.hottabych04.app.configuration.jwt;
 
 import com.hottabych04.app.configuration.jwt.configurer.JwtAuthenticationConfigurer;
 import com.hottabych04.app.database.repository.DeactivatedTokenRepository;
+import com.hottabych04.app.database.repository.UserRepository;
 import com.hottabych04.app.service.security.jwt.serializer.AccessTokenJwsDeserializer;
 import com.hottabych04.app.service.security.jwt.serializer.AccessTokenJwsSerializer;
 import com.hottabych04.app.service.security.jwt.serializer.RefreshTokenJweDeserializer;
@@ -27,6 +28,7 @@ public class JwtConfig {
     public JwtAuthenticationConfigurer jwtAuthenticationConfigurer(
             @Value("${jwt.access-token-key}") String accessTokenKey,
             @Value("${jwt.refresh-token-key}") String refreshTokenKey,
+            UserRepository userRepository,
             DeactivatedTokenRepository deactivatedTokenRepository
     ) throws ParseException, JOSEException {
         return new JwtAuthenticationConfigurer()
@@ -49,6 +51,9 @@ public class JwtConfig {
                         new RefreshTokenJweDeserializer(
                                 new DirectDecrypter(OctetSequenceKey.parse(refreshTokenKey))
                         )
+                )
+                .userRepository(
+                        userRepository
                 )
                 .deactivatedTokenRepository(
                         deactivatedTokenRepository
