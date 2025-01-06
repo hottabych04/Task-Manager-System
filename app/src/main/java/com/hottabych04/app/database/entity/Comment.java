@@ -3,6 +3,8 @@ package com.hottabych04.app.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @Setter
@@ -28,4 +30,6 @@ public class Comment {
     @JoinColumn(name = "id_task", nullable = false)
     private Task task;
 
+    @Column(name = "c_created_at", nullable = false)
+    private LocalDateTime createdAt;
 }

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS t_user
 --changeset hottabych04:2
 CREATE TABLE IF NOT EXISTS t_deactivated_token
 (
-    id UUID,
+    id           UUID,
     c_keep_until TIMESTAMP NOT NULL CHECK ( c_keep_until > now() ),
 
     PRIMARY KEY (id)
@@ -72,11 +72,11 @@ CREATE TABLE IF NOT EXISTS t_task
 --changeset hottabych04:8
 CREATE TABLE IF NOT EXISTS t_comment
 (
-    id        BIGSERIAL,
-    c_message TEXT   NOT NULL,
-    id_author BIGINT NOT NULL REFERENCES t_user (id),
-    id_task   BIGINT NOT NULL REFERENCES t_task (id),
-
+    id           BIGSERIAL,
+    c_message    TEXT      NOT NULL,
+    id_author    BIGINT    NOT NULL REFERENCES t_user (id),
+    id_task      BIGINT    NOT NULL REFERENCES t_task (id),
+    c_created_at TIMESTAMP NOT NULL,
     PRIMARY KEY (id)
 );
 
