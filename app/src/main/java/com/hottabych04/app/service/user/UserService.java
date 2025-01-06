@@ -10,6 +10,7 @@ import com.hottabych04.app.service.role.RoleService;
 import com.hottabych04.app.service.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,7 @@ public class UserService {
         throw new UserExistsException("User already exists", user.email());
     }
 
-    public UserGetDto getUserById(Long id){
+    public UserGetDto getUser(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("User with id: " + id + " not found");
@@ -61,7 +62,7 @@ public class UserService {
         return userMapper.toUserGetDto(user);
     }
 
-    public UserGetDto getUserByEmail(String email){
+    public UserGetDto getUser(String email){
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> {
                     log.error("User with username: " + email + " not found");
@@ -69,6 +70,26 @@ public class UserService {
                 });
 
         return userMapper.toUserGetDto(user);
+    }
+
+    public void deleteUser(Authentication authentication){
+        String email = authentication.getName();
+
+        userRepository.deleteByEmail(email);
+    }
+
+    public void deleteUser(Long id){
+        if (isExist(id)){
+            userRepository.deleteById(id);
+            return;
+        }
+
+        log.error("User with id: " + id + " not found");
+        throw new UserNotFoundException("User not found", id.toString());
+    }
+
+    private boolean isExist(Long id){
+        return userRepository.existsById(id);
     }
 
     private boolean isExist(String email){
