@@ -9,6 +9,8 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
     uses = {
         UserMapper.class,
@@ -18,6 +20,8 @@ import org.mapstruct.MappingConstants;
     injectionStrategy = InjectionStrategy.CONSTRUCTOR
 )
 public interface TaskMapper {
+
+    List<TaskGetDto> toTasksGetDto(List<Task> tasks);
 
     TaskGetDto toTaskGetDto(Task task);
 
