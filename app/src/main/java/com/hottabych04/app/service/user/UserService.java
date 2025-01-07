@@ -52,6 +52,14 @@ public class UserService {
         throw new UserExistsException("User already exists", user.email());
     }
 
+    public User getUserEntity(String email){
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> {
+                    log.error("User with username: " + email + " not found");
+                    return new UserNotFoundException("User not found", email);
+                });
+    }
+
     public UserGetDto getUser(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> {
