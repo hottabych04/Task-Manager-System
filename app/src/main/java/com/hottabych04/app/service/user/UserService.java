@@ -10,6 +10,8 @@ import com.hottabych04.app.service.role.RoleService;
 import com.hottabych04.app.service.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -78,6 +80,15 @@ public class UserService {
                 });
 
         return userMapper.toUserGetDto(user);
+    }
+
+    public Page<UserGetDto> getUsers(Integer page, Integer size) {
+
+        PageRequest request = PageRequest.of(page, size);
+
+        Page<User> userPage = userRepository.findAll(request);
+
+        return userPage.map(userMapper::toUserGetDto);
     }
 
     public void deleteUser(Authentication authentication){
