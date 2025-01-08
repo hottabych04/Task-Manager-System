@@ -4,12 +4,11 @@ import com.hottabych04.app.controller.task.payload.TaskCreateDto;
 import com.hottabych04.app.controller.task.payload.TaskGetDto;
 import com.hottabych04.app.service.task.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,11 +34,13 @@ public class TaskController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public List<TaskGetDto> getTasks(
+    public Page<TaskGetDto> getTasks(
             @RequestParam(value = "author", required = false) String author,
-            @RequestParam(value = "performer", required = false) String performer
+            @RequestParam(value = "performer", required = false) String performer,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "5") Integer size
     ){
-        return taskService.handleGetRequest(author, performer);
+        return taskService.handleGetRequest(author, performer, page, size);
     }
 
     @DeleteMapping("/{id}")

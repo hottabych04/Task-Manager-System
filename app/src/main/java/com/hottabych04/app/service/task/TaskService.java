@@ -12,11 +12,12 @@ import com.hottabych04.app.service.task.mapper.TaskMapper;
 import com.hottabych04.app.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Log4j2
@@ -72,35 +73,38 @@ public class TaskService {
         return taskMapper.toTaskGetDto(task);
     }
 
-    public List<TaskGetDto> handleGetRequest(String author, String performer){
+    public Page<TaskGetDto> handleGetRequest(String author, String performer, Integer page, Integer size){
+
+        PageRequest request = PageRequest.of(page, size);
+
         if (author != null){
-            return getTaskByAuthor(author);
+            return getTaskByAuthor(author, request);
         }
 
         if (performer != null) {
-            return getTasksByPerformer(performer);
+            return getTasksByPerformer(performer, request);
         }
 
-        return getTasks();
+        return getTasks(request);
     }
 
-    public List<TaskGetDto> getTaskByAuthor(String email){
+    public Page<TaskGetDto> getTaskByAuthor(String email, Pageable request){
         User author = userService.getUserEntity(email);
-        List<Task> tasks = taskRepository.findByAuthor(author);
+        Page<Task> tasks = taskRepository.findByAuthor(author, request);
 
-        return taskMapper.toTasksGetDto(tasks);
+        return tasks.map(taskMapper::toTaskGetDto);
     }
 
-    public List<TaskGetDto> getTasksByPerformer(String email){
+    public Page<TaskGetDto> getTasksByPerformer(String email, Pageable request){
         User performer = userService.getUserEntity(email);
-        List<Task> tasks = taskRepository.findByPerformersContains(performer);
+        Page<Task> tasks = taskRepository.findByPerformersContains(performer, request);
 
-        return taskMapper.toTasksGetDto(tasks);
+        return tasks.map(taskMapper::toTaskGetDto);
     }
 
-    public List<TaskGetDto> getTasks(){
-        List<Task> tasks = taskRepository.findAll();
-        return taskMapper.toTasksGetDto(tasks);
+    public Page<TaskGetDto> getTasks(Pageable request){
+        Page<Task> tasks = taskRepository.findAll(request);
+        return tasks.map(taskMapper::toTaskGetDto);
     }
 
     public void delete(Long id){

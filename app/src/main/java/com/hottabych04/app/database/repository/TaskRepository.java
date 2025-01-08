@@ -2,14 +2,14 @@ package com.hottabych04.app.database.repository;
 
 import com.hottabych04.app.database.entity.Task;
 import com.hottabych04.app.database.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findByAuthor(User author);
+    Page<Task> findByAuthor(User author, Pageable pageable);
 
-    List<Task> findByPerformersContains(User performer);
+    Page<Task> findByPerformersContains(User performer, Pageable pageable);
 
 }
