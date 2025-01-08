@@ -1,4 +1,4 @@
-package com.hottabych04.app.exception.prioority;
+package com.hottabych04.app.exception.priority;
 
 import com.hottabych04.app.exception.EntityNotFoundException;
 

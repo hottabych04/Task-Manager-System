@@ -3,6 +3,7 @@ package com.hottabych04.app.service.task;
 import com.hottabych04.app.controller.task.payload.TaskCreateDto;
 import com.hottabych04.app.controller.task.payload.TaskGetDto;
 import com.hottabych04.app.database.entity.Task;
+import com.hottabych04.app.database.entity.User;
 import com.hottabych04.app.database.repository.TaskRepository;
 import com.hottabych04.app.exception.task.TaskNotFoundException;
 import com.hottabych04.app.service.priority.PriorityService;
@@ -48,7 +49,7 @@ public class TaskService {
             );
         }
 
-        if (taskDto.performers() != null && !task.getPerformers().isEmpty()){
+        if (taskDto.performers() != null && !taskDto.performers().isEmpty()){
             task.setPerformers(
                taskDto.performers().stream()
                        .map(userService::getUserEntity)
@@ -71,9 +72,54 @@ public class TaskService {
         return taskMapper.toTaskGetDto(task);
     }
 
+    public List<TaskGetDto> handleGetRequest(String author, String performer){
+        if (author != null){
+            return getTaskByAuthor(author);
+        }
+
+        if (performer != null) {
+            return getTasksByPerformer(performer);
+        }
+
+        return getTasks();
+    }
+
+    public List<TaskGetDto> getTaskByAuthor(String email){
+        User author = userService.getUserEntity(email);
+        List<Task> tasks = taskRepository.findByAuthor(author);
+
+        return taskMapper.toTasksGetDto(tasks);
+    }
+
+    public List<TaskGetDto> getTasksByPerformer(String email){
+        User performer = userService.getUserEntity(email);
+        List<Task> tasks = taskRepository.findByPerformersContains(performer);
+
+        return taskMapper.toTasksGetDto(tasks);
+    }
+
     public List<TaskGetDto> getTasks(){
         List<Task> tasks = taskRepository.findAll();
         return taskMapper.toTasksGetDto(tasks);
+    }
+
+    public void addPerformers(Long id, List<String> emails){
+        if (emails != null && !emails.isEmpty()){
+            emails.forEach(it -> addPerformer(id, it));
+        }
+    }
+
+    public void addPerformer(Long id, String email){
+        User performer = userService.getUserEntity(email);
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Task by id: " + id + " is not found");
+                    return new TaskNotFoundException("Task not found", id.toString());
+                });
+
+        task.getPerformers().add(performer);
+
+        taskRepository.save(task);
     }
 
     public void delete(Long id){
