@@ -42,15 +42,6 @@ public class TaskController {
         return taskService.handleGetRequest(author, performer);
     }
 
-    @PatchMapping("/performers/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void addPerformers(
-            @PathVariable Long id,
-            @RequestBody List<String> performers
-    ){
-        taskService.addPerformers(id, performers);
-    }
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

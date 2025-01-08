@@ -103,25 +103,6 @@ public class TaskService {
         return taskMapper.toTasksGetDto(tasks);
     }
 
-    public void addPerformers(Long id, List<String> emails){
-        if (emails != null && !emails.isEmpty()){
-            emails.forEach(it -> addPerformer(id, it));
-        }
-    }
-
-    public void addPerformer(Long id, String email){
-        User performer = userService.getUserEntity(email);
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Task by id: " + id + " is not found");
-                    return new TaskNotFoundException("Task not found", id.toString());
-                });
-
-        task.getPerformers().add(performer);
-
-        taskRepository.save(task);
-    }
-
     public void delete(Long id){
         taskRepository.deleteById(id);
     }
