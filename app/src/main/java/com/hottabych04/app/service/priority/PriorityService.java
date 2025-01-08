@@ -2,7 +2,7 @@ package com.hottabych04.app.service.priority;
 
 import com.hottabych04.app.database.entity.Priority;
 import com.hottabych04.app.database.repository.PriorityRepository;
-import com.hottabych04.app.exception.prioority.PriorityNotFoundException;
+import com.hottabych04.app.exception.priority.PriorityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
