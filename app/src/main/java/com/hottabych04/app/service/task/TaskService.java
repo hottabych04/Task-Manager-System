@@ -73,6 +73,14 @@ public class TaskService {
         return taskMapper.toTaskGetDto(task);
     }
 
+    public Task getTaskEntity(Long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Task by id: " + id + " is not found");
+                    return new TaskNotFoundException("Task not found", id.toString());
+                });
+    }
+
     public Page<TaskGetDto> handleGetRequest(String author, String performer, Integer page, Integer size){
 
         PageRequest request = PageRequest.of(page, size);
@@ -110,5 +118,4 @@ public class TaskService {
     public void delete(Long id){
         taskRepository.deleteById(id);
     }
-
 }
