@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS t_role_to_user
     id_role INT    NOT NULL REFERENCES t_role (id),
     id_user BIGINT NOT NULL REFERENCES t_user (id),
 
+    UNIQUE (id_role, id_user),
     PRIMARY KEY (id)
 );
 
@@ -88,5 +89,6 @@ CREATE TABLE IF NOT EXISTS t_user_to_task
     id_user BIGINT NOT NULL REFERENCES t_user (id),
     id_task BIGINT NOT NULL REFERENCES t_task (id),
 
+    UNIQUE (id_user, id_task),
     PRIMARY KEY (id)
 );
