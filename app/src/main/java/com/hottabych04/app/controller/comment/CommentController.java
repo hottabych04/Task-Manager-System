@@ -4,12 +4,10 @@ import com.hottabych04.app.controller.comment.payload.CommentCreateDto;
 import com.hottabych04.app.controller.comment.payload.CommentGetDto;
 import com.hottabych04.app.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +23,24 @@ public class CommentController {
             Authentication authentication
     ){
         return commentService.create(comment, authentication);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public CommentGetDto getComment(
+            @PathVariable Long id,
+            Authentication authentication
+    ){
+        return commentService.getComment(id, authentication);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(
+            @PathVariable Long id,
+            Authentication authentication
+    ){
+        commentService.delete(id, authentication);
     }
 }
