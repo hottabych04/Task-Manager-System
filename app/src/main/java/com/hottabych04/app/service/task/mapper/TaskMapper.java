@@ -25,4 +25,6 @@ public interface TaskMapper {
 
     TaskGetDto toTaskGetDto(Task task);
 
+    Long getTaskId(Task task);
+
 }
