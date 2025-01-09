@@ -14,6 +14,8 @@ import com.hottabych04.app.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -38,7 +40,7 @@ public class CommentService {
         Task task = taskService.getTaskEntity(commentCreateDto.task());
         User author = userService.getUserEntity(authentication.getName());
 
-        if (authorizationUtil.isUser(authentication) && !task.getPerformers().contains(author)){
+        if (!authorizationUtil.isAdmin(authentication) && !task.getPerformers().contains(author)){
             log.error("User: " + author.getEmail() + " dont have access to the task: " + task.getId());
             throw new AccessDeniedException("User: " + author.getEmail() + " dont have access to the task: " + task.getId());
         }
@@ -71,11 +73,7 @@ public class CommentService {
         User user = userService.getUserEntity(authentication.getName());
         Task task = comment.getTask();
 
-        if (authorizationUtil.isAdmin(authentication) ||
-                comment.getAuthor().equals(user) ||
-                task.getAuthor().equals(user) ||
-                task.getPerformers().contains(user)
-        ){
+        if (authorizationUtil.isAdmin(authentication) || task.getPerformers().contains(user)){
             return comment;
         }
 
@@ -83,8 +81,36 @@ public class CommentService {
         throw new AccessDeniedException("User: " + user.getEmail() + " dont have access to the task: " + task.getId());
     }
 
+    public Page<CommentGetDto> getComments(Long taskId, Integer page, Integer size, Authentication authentication){
+        PageRequest request = PageRequest.of(page, size, Sort.by("createdAt"));
+
+        Task task = taskService.getTaskEntity(taskId);
+        User user = userService.getUserEntity(authentication.getName());
+
+        if (authorizationUtil.isAdmin(authentication) || task.getPerformers().contains(user)){
+            Page<Comment> commentPage = commentRepository.findByTask(task, request);
+            return commentPage.map(commentMapper::toCommentGetDto);
+        }
+
+        log.error("User: " + user.getEmail() + " dont have access to the task: " + task.getId());
+        throw new AccessDeniedException("User: " + user.getEmail() + " dont have access to the task: " + task.getId());
+    }
+
     public void delete(Long id, Authentication authentication){
-        Comment comment = getCommentEntity(id, authentication);
-        commentRepository.delete(comment);
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Comment: " + id + " is not found");
+                    return new CommentNotFoundException("Comment not found", id.toString());
+                });
+
+        String userEmail = authentication.getName();
+
+        if (comment.getAuthor().getEmail().equals(userEmail) || authorizationUtil.isAdmin(authentication)){
+            commentRepository.delete(comment);
+            return;
+        }
+
+        log.error("User: " + userEmail + " dont have delete permissions to the comment: " + comment.getId());
+        throw new AccessDeniedException("User: " + userEmail + " dont have delete permissions to the task: " + comment.getId());
     }
 }

@@ -25,6 +25,12 @@ public interface TaskMapper {
 
     TaskGetDto toTaskGetDto(Task task);
 
-    Long getTaskId(Task task);
+    default Long getTaskId(Task task){
+        if (task != null && task.getId() != null){
+            return task.getId();
+        }
+
+        return null;
+    }
 
 }

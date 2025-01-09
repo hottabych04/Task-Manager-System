@@ -4,6 +4,7 @@ import com.hottabych04.app.controller.comment.payload.CommentCreateDto;
 import com.hottabych04.app.controller.comment.payload.CommentGetDto;
 import com.hottabych04.app.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,16 @@ public class CommentController {
             Authentication authentication
     ){
         return commentService.getComment(id, authentication);
+    }
+
+    @GetMapping("/task/{id}")
+    public Page<CommentGetDto> getComments(
+            @PathVariable Long id,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "5") Integer size,
+            Authentication authentication
+    ){
+        return commentService.getComments(id,page, size, authentication);
     }
 
     @DeleteMapping("/{id}")
