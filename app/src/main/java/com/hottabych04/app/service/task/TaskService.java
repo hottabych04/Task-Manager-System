@@ -1,12 +1,17 @@
 package com.hottabych04.app.service.task;
 
+import com.hottabych04.app.controller.task.payload.PriorityDto;
+import com.hottabych04.app.controller.task.payload.StatusDto;
 import com.hottabych04.app.controller.task.payload.TaskCreateDto;
 import com.hottabych04.app.controller.task.payload.TaskGetDto;
+import com.hottabych04.app.database.entity.Priority;
+import com.hottabych04.app.database.entity.Status;
 import com.hottabych04.app.database.entity.Task;
 import com.hottabych04.app.database.entity.User;
 import com.hottabych04.app.database.repository.TaskRepository;
 import com.hottabych04.app.exception.task.TaskNotFoundException;
 import com.hottabych04.app.service.priority.PriorityService;
+import com.hottabych04.app.service.security.AuthorizationUtil;
 import com.hottabych04.app.service.status.StatusService;
 import com.hottabych04.app.service.task.mapper.TaskMapper;
 import com.hottabych04.app.service.user.UserService;
@@ -15,6 +20,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +37,8 @@ public class TaskService {
     private final StatusService statusService;
     private final PriorityService priorityService;
     private final UserService userService;
+
+    private final AuthorizationUtil authorizationUtil;
 
     public TaskGetDto createTask(TaskCreateDto taskDto, Authentication authentication){
         Task task = Task.builder()
@@ -113,6 +121,46 @@ public class TaskService {
     public Page<TaskGetDto> getTasks(Pageable request){
         Page<Task> tasks = taskRepository.findAll(request);
         return tasks.map(taskMapper::toTaskGetDto);
+    }
+
+    public TaskGetDto updateTaskStatus(Long taskId, StatusDto statusDto, Authentication authentication){
+        Status newStatus = statusService.getStatus(statusDto.status());
+        Task task = getTaskEntity(taskId);
+
+        String userEmail = authentication.getName();
+        if (authorizationUtil.isAdmin(authentication) ||
+                task.getPerformers().stream().anyMatch(it -> it.getEmail().equals(userEmail))
+        ){
+            task.setStatus(newStatus);
+
+            Task updatedTask = taskRepository.save(task);
+
+            return taskMapper.toTaskGetDto(updatedTask);
+        }
+
+        log.error("User: " + userEmail + " dont update status in task: " + taskId);
+        throw new AccessDeniedException("User dont have access to update this task");
+
+
+    }
+
+    public TaskGetDto updateTaskPriority(Long taskId, PriorityDto priorityDto, Authentication authentication){
+        Priority newPriority = priorityService.getPriority(priorityDto.priority());
+        Task task = getTaskEntity(taskId);
+
+        String userEmail = authentication.getName();
+        if (authorizationUtil.isAdmin(authentication) ||
+                task.getPerformers().stream().anyMatch(it -> it.getEmail().equals(userEmail))
+        ){
+            task.setPriority(newPriority);
+
+            Task updatedTask = taskRepository.save(task);
+
+            return taskMapper.toTaskGetDto(updatedTask);
+        }
+
+        log.error("User: " + userEmail + " dont update priority in task: " + taskId);
+        throw new AccessDeniedException("User dont have access to update this task");
     }
 
     public void delete(Long id){

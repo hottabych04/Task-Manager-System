@@ -1,5 +1,7 @@
 package com.hottabych04.app.controller.task;
 
+import com.hottabych04.app.controller.task.payload.PriorityDto;
+import com.hottabych04.app.controller.task.payload.StatusDto;
 import com.hottabych04.app.controller.task.payload.TaskCreateDto;
 import com.hottabych04.app.controller.task.payload.TaskGetDto;
 import com.hottabych04.app.service.task.PerformerService;
@@ -49,20 +51,40 @@ public class TaskController {
 
     @PatchMapping("/{id}/performers")
     @PreAuthorize("hasRole('ADMIN')")
-    public void addPerformer(
+    public TaskGetDto addPerformer(
             @PathVariable Long id,
             @RequestBody List<String> performers
     ){
-        performerService.addPerformers(id, performers);
+        return performerService.addPerformers(id, performers);
     }
 
     @DeleteMapping("/{id}/performers")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deletePerformer(
+    public TaskGetDto deletePerformer(
             @PathVariable Long id,
             @RequestParam("email") String performer
     ){
-        performerService.deletePerformer(id, performer);
+        return performerService.deletePerformer(id, performer);
+    }
+
+    @PatchMapping("/{id}/priorities")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public TaskGetDto updatePriority(
+            @PathVariable Long id,
+            @RequestBody PriorityDto priority,
+            Authentication authentication
+            ){
+        return taskService.updateTaskPriority(id, priority, authentication);
+    }
+
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public TaskGetDto updatePriority(
+            @PathVariable Long id,
+            @RequestBody StatusDto status,
+            Authentication authentication
+            ){
+        return taskService.updateTaskStatus(id, status, authentication);
     }
 
     @DeleteMapping("/{id}")
