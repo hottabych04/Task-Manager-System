@@ -22,3 +22,5 @@ logging:
 jwt:
   access-token-key: '{"kty":"oct","k":"UvEe/l6EH1H9M6tXhaMMayjqRg832dtLSqGQtv3xgJmnncM2J7GXayM0fJ/Po3lP"}'
   refresh-token-key: '{"kty":"oct","k":"z28JjqMOTZY85hHJ0C7Z06tbgtYeUNkc"}'
+  access-token-duration: 10
+  refresh-token-duration: 360

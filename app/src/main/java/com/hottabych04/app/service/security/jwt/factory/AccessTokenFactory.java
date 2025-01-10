@@ -1,16 +1,17 @@
 package com.hottabych04.app.service.security.jwt.factory;
 
 import com.hottabych04.app.service.security.jwt.entity.Token;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Function;
 
-@Setter
+@RequiredArgsConstructor
 public class AccessTokenFactory implements Function<Token, Token> {
 
-    private Duration tokenTtl = Duration.ofMinutes(10L);
+    private final Duration tokenTtl;
 
     @Override
     public Token apply(Token token) {

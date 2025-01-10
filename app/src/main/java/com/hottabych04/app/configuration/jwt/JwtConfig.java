@@ -1,8 +1,7 @@
 package com.hottabych04.app.configuration.jwt;
 
-import com.hottabych04.app.configuration.jwt.configurer.JwtAuthenticationConfigurer;
-import com.hottabych04.app.database.repository.DeactivatedTokenRepository;
-import com.hottabych04.app.database.repository.UserRepository;
+import com.hottabych04.app.service.security.jwt.factory.AccessTokenFactory;
+import com.hottabych04.app.service.security.jwt.factory.RefreshTokenFactory;
 import com.hottabych04.app.service.security.jwt.serializer.AccessTokenJwsDeserializer;
 import com.hottabych04.app.service.security.jwt.serializer.AccessTokenJwsSerializer;
 import com.hottabych04.app.service.security.jwt.serializer.RefreshTokenJweDeserializer;
@@ -19,45 +18,65 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.text.ParseException;
+import java.time.Duration;
 
 @Configuration
 @RequiredArgsConstructor
 public class JwtConfig {
 
     @Bean
-    public JwtAuthenticationConfigurer jwtAuthenticationConfigurer(
-            @Value("${jwt.access-token-key}") String accessTokenKey,
-            @Value("${jwt.refresh-token-key}") String refreshTokenKey,
-            UserRepository userRepository,
-            DeactivatedTokenRepository deactivatedTokenRepository
+    public AccessTokenJwsSerializer accessTokenJwsSerializer(
+            @Value("${jwt.access-token-key}") String accessTokenKey
     ) throws ParseException, JOSEException {
-        return new JwtAuthenticationConfigurer()
-                .accessTokenJwsSerializer(
-                        new AccessTokenJwsSerializer(
-                                new MACSigner(OctetSequenceKey.parse(accessTokenKey))
-                        )
-                )
-                .refreshTokenJweSerializer(
-                        new RefreshTokenJweSerializer(
-                                new DirectEncrypter(OctetSequenceKey.parse(refreshTokenKey))
-                        )
-                )
-                .accessTokenDeserializer(
-                        new AccessTokenJwsDeserializer(
-                                new MACVerifier(OctetSequenceKey.parse(accessTokenKey))
-                        )
-                )
-                .refreshTokenDeserializer(
-                        new RefreshTokenJweDeserializer(
-                                new DirectDecrypter(OctetSequenceKey.parse(refreshTokenKey))
-                        )
-                )
-                .userRepository(
-                        userRepository
-                )
-                .deactivatedTokenRepository(
-                        deactivatedTokenRepository
-                );
+        return new AccessTokenJwsSerializer(
+                new MACSigner(OctetSequenceKey.parse(accessTokenKey))
+        );
+    }
+
+    @Bean
+    public AccessTokenJwsDeserializer accessTokenJwsDeserializer(
+            @Value("${jwt.access-token-key}") String accessTokenKey
+    ) throws ParseException, JOSEException {
+        return new AccessTokenJwsDeserializer(
+                new MACVerifier(OctetSequenceKey.parse(accessTokenKey))
+        );
+    }
+
+    @Bean
+    public RefreshTokenJweSerializer refreshTokenJweSerializer(
+            @Value("${jwt.refresh-token-key}") String refreshTokenKey
+    ) throws ParseException, JOSEException {
+        return new RefreshTokenJweSerializer(
+                new DirectEncrypter(OctetSequenceKey.parse(refreshTokenKey))
+        );
+    }
+
+    @Bean
+    public RefreshTokenJweDeserializer refreshTokenJweDeserializer(
+            @Value("${jwt.refresh-token-key}") String refreshTokenKey
+    ) throws ParseException, JOSEException {
+        return new RefreshTokenJweDeserializer(
+                new DirectDecrypter(OctetSequenceKey.parse(refreshTokenKey))
+        );
+    }
+
+    @Bean
+    public AccessTokenFactory accessTokenFactory(
+            @Value("${jwt.access-token-duration}") Long accessTokenDuration
+    ){
+        return new AccessTokenFactory(
+                Duration.ofMinutes(accessTokenDuration)
+        );
+    }
+
+    @Bean
+    public RefreshTokenFactory refreshTokenFactory(
+            @Value("${jwt.refresh-token-duration}") Long refreshTokenDuration
+    )
+    {
+        return new RefreshTokenFactory(
+                Duration.ofMinutes(refreshTokenDuration)
+        );
     }
 }
 

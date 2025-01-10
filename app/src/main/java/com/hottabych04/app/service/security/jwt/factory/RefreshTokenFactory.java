@@ -1,6 +1,7 @@
 package com.hottabych04.app.service.security.jwt.factory;
 
 import com.hottabych04.app.service.security.jwt.entity.Token;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,10 +12,10 @@ import java.util.LinkedList;
 import java.util.UUID;
 import java.util.function.Function;
 
-@Setter
+@RequiredArgsConstructor
 public class RefreshTokenFactory implements Function<Authentication, Token> {
 
-    private Duration tokentTtl = Duration.ofHours(6L);
+    private final Duration tokentTtl;
 
     @Override
     public Token apply(Authentication authentication) {
