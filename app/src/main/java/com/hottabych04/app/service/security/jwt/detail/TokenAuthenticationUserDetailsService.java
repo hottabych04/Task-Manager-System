@@ -1,4 +1,4 @@
-package com.hottabych04.app.service.security.jwt;
+package com.hottabych04.app.service.security.jwt.detail;
 
 import com.hottabych04.app.database.repository.DeactivatedTokenRepository;
 import com.hottabych04.app.database.repository.UserRepository;

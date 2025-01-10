@@ -2,7 +2,7 @@ package com.hottabych04.app.configuration.jwt.configurer;
 
 import com.hottabych04.app.database.repository.UserRepository;
 import com.hottabych04.app.database.repository.DeactivatedTokenRepository;
-import com.hottabych04.app.service.security.jwt.TokenAuthenticationUserDetailsService;
+import com.hottabych04.app.service.security.jwt.detail.TokenAuthenticationUserDetailsService;
 import com.hottabych04.app.service.security.jwt.converter.JwtAuthenticationConverter;
 import com.hottabych04.app.service.security.jwt.serializer.AccessTokenJwsDeserializer;
 import com.hottabych04.app.service.security.jwt.serializer.RefreshTokenJweDeserializer;
