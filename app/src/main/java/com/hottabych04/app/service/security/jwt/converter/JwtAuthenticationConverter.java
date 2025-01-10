@@ -13,6 +13,8 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtAuthenticationConverter implements AuthenticationConverter {
 
+    private final static String BEARER_PREFIX = "Bearer ";
+
     private final Function<String, Token> accessTokenDeserializer;
 
     private final Function<String, Token> refreshTokenDeserializer;
@@ -20,8 +22,8 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
     @Override
     public Authentication convert(HttpServletRequest request) {
         var authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization != null && authorization.startsWith("Bearer ")){
-            var token = authorization.replace("Bearer ", "");
+        if (authorization != null && authorization.startsWith(BEARER_PREFIX)){
+            var token = authorization.replace(BEARER_PREFIX, "");
 
             var accessToken = this.accessTokenDeserializer.apply(token);
             if (accessToken != null) {
