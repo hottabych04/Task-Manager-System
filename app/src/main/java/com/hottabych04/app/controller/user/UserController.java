@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,7 +20,7 @@ public class UserController {
 
     @PostMapping
     @PreAuthorize("isAnonymous()")
-    public UserGetDto createUser(@RequestBody UserCreateDto user){
+    public UserGetDto createUser(@RequestBody @Validated UserCreateDto user){
         return userService.createUser(user);
     }
 
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(Authentication authentication){
         userService.deleteUser(authentication);

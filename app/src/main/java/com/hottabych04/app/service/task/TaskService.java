@@ -43,7 +43,6 @@ public class TaskService {
     public TaskGetDto createTask(TaskCreateDto taskDto, Authentication authentication){
         Task task = Task.builder()
                 .name(taskDto.name())
-                .description(taskDto.description())
                 .status(
                         statusService.getStatus(taskDto.status())
                 )
@@ -51,6 +50,10 @@ public class TaskService {
                         userService.getUserEntity(authentication.getName())
                 )
                 .build();
+
+        if (taskDto.description() != null){
+            task.setDescription(task.getDescription());
+        }
 
         if (taskDto.priority() != null){
             task.setPriority(
@@ -67,7 +70,6 @@ public class TaskService {
         }
 
         Task newTask = taskRepository.save(task);
-
         return taskMapper.toTaskGetDto(newTask);
     }
 

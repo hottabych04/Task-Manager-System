@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class TaskController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public TaskGetDto createTask(
-            @RequestBody TaskCreateDto task,
+            @RequestBody @Validated TaskCreateDto task,
             Authentication authentication
     ){
         return taskService.createTask(task, authentication);
@@ -71,7 +72,7 @@ public class TaskController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public TaskGetDto updatePriority(
             @PathVariable Long id,
-            @RequestBody PriorityDto priority,
+            @RequestBody @Validated PriorityDto priority,
             Authentication authentication
             ){
         return taskService.updateTaskPriority(id, priority, authentication);
@@ -81,7 +82,7 @@ public class TaskController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public TaskGetDto updatePriority(
             @PathVariable Long id,
-            @RequestBody StatusDto status,
+            @RequestBody @Validated StatusDto status,
             Authentication authentication
             ){
         return taskService.updateTaskStatus(id, status, authentication);
