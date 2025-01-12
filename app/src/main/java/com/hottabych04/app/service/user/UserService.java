@@ -2,8 +2,10 @@ package com.hottabych04.app.service.user;
 
 import com.hottabych04.app.controller.user.payload.UserCreateDto;
 import com.hottabych04.app.controller.user.payload.UserGetDto;
+import com.hottabych04.app.database.entity.Role;
 import com.hottabych04.app.database.entity.User;
 import com.hottabych04.app.database.repository.UserRepository;
+import com.hottabych04.app.exception.role.RoleExistException;
 import com.hottabych04.app.exception.user.UserExistsException;
 import com.hottabych04.app.exception.user.UserNotFoundException;
 import com.hottabych04.app.service.role.RoleService;
@@ -54,6 +56,23 @@ public class UserService {
         throw new UserExistsException("User already exists", user.email());
     }
 
+    public UserGetDto getUser(Long id){
+        User user = getUserEntity(id);
+        return userMapper.toUserGetDto(user);
+    }
+
+    public UserGetDto getUser(String email){
+        User user = getUserEntity(email);
+        return userMapper.toUserGetDto(user);
+    }
+
+    public Page<UserGetDto> getUsers(Integer page, Integer size) {
+        PageRequest request = PageRequest.of(page, size);
+        Page<User> userPage = userRepository.findAll(request);
+
+        return userPage.map(userMapper::toUserGetDto);
+    }
+
     public User getUserEntity(String email){
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> {
@@ -62,33 +81,36 @@ public class UserService {
                 });
     }
 
-    public UserGetDto getUser(Long id){
-        User user = userRepository.findById(id)
+    public User getUserEntity(Long id){
+        return userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("User with id: " + id + " not found");
                     return new UserNotFoundException("User not found", id.toString());
                 });
-
-        return userMapper.toUserGetDto(user);
     }
 
-    public UserGetDto getUser(String email){
-        User user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> {
-                    log.error("User with username: " + email + " not found");
-                    return new UserNotFoundException("User not found", email);
-                });
+    public UserGetDto updateAdminRole(Long id){
+        User user = getUserEntity(id);
+        Role admin = roleService.getRole("ADMIN");
 
-        return userMapper.toUserGetDto(user);
+        if (user.getRoles().contains(admin)){
+            log.error("Admin role is exists for user: " + user.getEmail());
+            throw new RoleExistException("Admin role is exists for user", user.getEmail());
+        }
+        user.getRoles().add(admin);
+
+        User updatedUser = userRepository.save(user);
+        return userMapper.toUserGetDto(updatedUser);
     }
 
-    public Page<UserGetDto> getUsers(Integer page, Integer size) {
+    public UserGetDto deleteAdminRole(Long id){
+        User user = getUserEntity(id);
+        Role admin = roleService.getRole("ADMIN");
 
-        PageRequest request = PageRequest.of(page, size);
+        user.getRoles().remove(admin);
 
-        Page<User> userPage = userRepository.findAll(request);
-
-        return userPage.map(userMapper::toUserGetDto);
+        User updatedUser = userRepository.save(user);
+        return userMapper.toUserGetDto(updatedUser);
     }
 
     public void deleteUser(Authentication authentication){

@@ -45,6 +45,18 @@ public class UserController {
         return userService.getUsers(page, size);
     }
 
+    @PatchMapping("/{id}/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserGetDto addAdminRole(@PathVariable Long id){
+        return userService.updateAdminRole(id);
+    }
+
+    @DeleteMapping("/{id}/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserGetDto deleteAdminRole(@PathVariable Long id){
+        return userService.deleteAdminRole(id);
+    }
+
     @DeleteMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
