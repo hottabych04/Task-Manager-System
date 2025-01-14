@@ -1,10 +1,10 @@
-package com.hottabych04.app.controller.user.payload;
+package com.hottabych04.app.controller.jwt.payload;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record UserCreateDto(
+public record LoginRequest(
         @Email(message = "{user.request.valid.email}")
         String email,
         @NotBlank(message = "{user.request.password.not_empty}")

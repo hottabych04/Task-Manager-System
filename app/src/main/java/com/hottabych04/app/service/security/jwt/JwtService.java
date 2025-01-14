@@ -1,5 +1,6 @@
 package com.hottabych04.app.service.security.jwt;
 
+import com.hottabych04.app.controller.jwt.payload.LoginRequest;
 import com.hottabych04.app.database.entity.DeactivatedToken;
 import com.hottabych04.app.database.repository.DeactivatedTokenRepository;
 import com.hottabych04.app.service.security.jwt.entity.RefreshedAccessToken;
@@ -13,6 +14,8 @@ import com.hottabych04.app.service.security.jwt.serializer.RefreshTokenJweSerial
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,8 @@ import java.time.ZoneId;
 @RequiredArgsConstructor
 public class JwtService {
 
+    private final AuthenticationManager authenticationManager;
+
     private final AccessTokenJwsSerializer accessTokenJwsSerializer;
     private final RefreshTokenJweSerializer refreshTokenJweSerializer;
 
@@ -32,7 +37,15 @@ public class JwtService {
 
     private final DeactivatedTokenRepository deactivatedTokenRepository;
 
-    public Tokens createTokens(Authentication authentication){
+    public Tokens createTokens(LoginRequest request){
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
+
         if (!(authentication instanceof PreAuthenticatedAuthenticationToken)){
             Token refreshToken = refreshTokenFactory.apply(authentication);
             Token accessToken = accessTokenFactory.apply(refreshToken);

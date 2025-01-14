@@ -33,7 +33,7 @@ public class JwtAuthenticationConfigurer extends AbstractHttpConfigurer<JwtAuthe
     public void init(HttpSecurity builder) throws Exception {
         var csrfConfigurer = builder.getConfigurer(CsrfConfigurer.class);
         if (csrfConfigurer != null) {
-            csrfConfigurer.ignoringRequestMatchers(new AntPathRequestMatcher("/**/jwt/tokens", HttpMethod.POST.name()));
+            csrfConfigurer.ignoringRequestMatchers(new AntPathRequestMatcher("/**/auth/login", HttpMethod.POST.name()));
         }
     }
 
