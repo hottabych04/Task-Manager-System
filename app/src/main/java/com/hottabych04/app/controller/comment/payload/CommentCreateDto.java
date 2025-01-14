@@ -7,10 +7,10 @@ import jakarta.validation.constraints.Positive;
 
 
 public record CommentCreateDto(
-        @NotEmpty
+        @NotEmpty(message = "{comment.request.message.not_empty}")
         String message,
-        @Positive
-        @NotNull
+        @Positive(message = "{comment.request.task.positive}")
+        @NotNull(message = "{comment.request.task.not_null}")
         @JsonProperty("taskId")
         Long task
 ) {

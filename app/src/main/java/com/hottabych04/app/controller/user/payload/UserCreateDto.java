@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public record UserCreateDto(
-        @Email
+        @Email(message = "{user.request.valid.email}")
         String email,
-        @NotEmpty
-        @Size(min = 8, max = 20)
+        @NotEmpty(message = "{user.request.password.not_empty}")
+        @Size(min = 8, max = 20, message = "{user.request.password.size}")
         String password
 ) {
 }
