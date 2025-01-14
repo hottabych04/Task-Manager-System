@@ -53,7 +53,7 @@ public class UserService {
         }
 
         log.error("User with email: " + user.email() + " already exists");
-        throw new UserExistsException("User already exists", user.email());
+        throw new UserExistsException(user.email());
     }
 
     public UserGetDto getUser(Long id){
@@ -77,7 +77,7 @@ public class UserService {
         return userRepository.findUserByEmail(email)
                 .orElseThrow(() -> {
                     log.error("User with username: " + email + " not found");
-                    return new UserNotFoundException("User not found", email);
+                    return new UserNotFoundException(email);
                 });
     }
 
@@ -85,7 +85,7 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("User with id: " + id + " not found");
-                    return new UserNotFoundException("User not found", id.toString());
+                    return new UserNotFoundException(id.toString());
                 });
     }
 
@@ -95,7 +95,7 @@ public class UserService {
 
         if (user.getRoles().contains(admin)){
             log.error("Admin role is exists for user: " + user.getEmail());
-            throw new RoleExistException("Admin role is exists for user", user.getEmail());
+            throw new RoleExistException(user.getEmail());
         }
         user.getRoles().add(admin);
 
@@ -126,7 +126,7 @@ public class UserService {
         }
 
         log.error("User with id: " + id + " not found");
-        throw new UserNotFoundException("User not found", id.toString());
+        throw new UserNotFoundException(id.toString());
     }
 
     private boolean isExist(Long id){

@@ -21,7 +21,7 @@ public class AuthenticationUserDetailsService implements UserDetailsService {
         return userRepository.findUserByEmail(username)
                 .orElseThrow(() -> {
                     log.error("User with username: " + username + " not found");
-                    return new UserNotFoundException("User not found", username);
+                    return new UserNotFoundException(username);
                 });
     }
 }

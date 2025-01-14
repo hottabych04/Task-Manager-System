@@ -1,11 +1,17 @@
 package com.hottabych04.app.exception;
 
-public class TaskManagerRuntimeException extends RuntimeException{
-    public TaskManagerRuntimeException(String message) {
-        super(message);
-    }
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
-    public TaskManagerRuntimeException(String message, Throwable cause) {
-        super(message, cause);
+@Getter
+public class TaskManagerRuntimeException extends RuntimeException{
+
+    private final HttpStatus httpStatus;
+    private final Object[] args;
+
+    public TaskManagerRuntimeException(String message, HttpStatus httpStatus, Object[] args) {
+        super(message);
+        this.httpStatus = httpStatus;
+        this.args = args;
     }
 }

@@ -30,7 +30,7 @@ public class PerformerService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Task by id: " + id + " is not found");
-                    return new TaskNotFoundException("Task not found", id.toString());
+                    return new TaskNotFoundException(id.toString());
                 });
 
         if (emails != null && !emails.isEmpty()){
@@ -52,12 +52,12 @@ public class PerformerService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Task by id: " + id + " is not found");
-                    return new TaskNotFoundException("Task not found", id.toString());
+                    return new TaskNotFoundException(id.toString());
                 });
 
         if (!task.getPerformers().remove(performer)){
             log.error("Performer: " + performer.getEmail() + " not fond in task: " + task.getId());
-            throw new PerformerNotFoundException("Performer not found in this task", performer.getEmail());
+            throw new PerformerNotFoundException(performer.getEmail());
         }
 
         return taskMapper.toTaskGetDto(task);

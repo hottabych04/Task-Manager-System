@@ -18,7 +18,7 @@ public class PriorityService {
         return priorityRepository.findByName(priority)
                 .orElseThrow(() -> {
                     log.error("Priority: " + priority + " is not found");
-                    return new PriorityNotFoundException("Priority not found", priority);
+                    return new PriorityNotFoundException(priority);
                 });
     }
 

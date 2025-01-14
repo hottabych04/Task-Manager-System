@@ -77,7 +77,7 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Task by id: " + id + " is not found");
-                    return new TaskNotFoundException("Task not found", id.toString());
+                    return new TaskNotFoundException(id.toString());
                 });
 
         return taskMapper.toTaskGetDto(task);
@@ -87,7 +87,7 @@ public class TaskService {
         return taskRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Task by id: " + id + " is not found");
-                    return new TaskNotFoundException("Task not found", id.toString());
+                    return new TaskNotFoundException(id.toString());
                 });
     }
 

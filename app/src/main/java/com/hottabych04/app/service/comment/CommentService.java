@@ -67,7 +67,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Comment: " + id + " is not found");
-                    return new CommentNotFoundException("Comment not found", id.toString());
+                    return new CommentNotFoundException(id.toString());
                 });
 
         User user = userService.getUserEntity(authentication.getName());
@@ -100,7 +100,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Comment: " + id + " is not found");
-                    return new CommentNotFoundException("Comment not found", id.toString());
+                    return new CommentNotFoundException(id.toString());
                 });
 
         String userEmail = authentication.getName();

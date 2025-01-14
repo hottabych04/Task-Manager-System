@@ -18,7 +18,7 @@ public class StatusService {
         return statusRepository.findByName(status)
                 .orElseThrow(() -> {
                     log.error("Status: " + status + " is not found");
-                    return new StatusNotFoundException("Status not found", status);
+                    return new StatusNotFoundException(status);
                 });
     }
 

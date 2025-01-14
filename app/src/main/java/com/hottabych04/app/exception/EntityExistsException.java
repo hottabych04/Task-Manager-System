@@ -1,16 +1,10 @@
 package com.hottabych04.app.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class EntityExistsException extends TaskManagerRuntimeException {
 
-    private final String entityDetails;
-
     public EntityExistsException(String message, String entityDetails) {
-        super(message);
-        this.entityDetails = entityDetails;
-    }
-
-    public EntityExistsException(String message, Throwable cause, String entityDetails) {
-        super(message, cause);
-        this.entityDetails = entityDetails;
+        super(message, HttpStatus.BAD_REQUEST, new Object[]{entityDetails});
     }
 }
