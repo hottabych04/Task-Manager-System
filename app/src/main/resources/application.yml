@@ -12,6 +12,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         enable_lazy_load_no_trans: true
 
+
 server:
   port: 8080
 
@@ -24,3 +25,7 @@ jwt:
   refresh-token-key: '{"kty":"oct","k":"z28JjqMOTZY85hHJ0C7Z06tbgtYeUNkc"}'
   access-token-duration: 10
   refresh-token-duration: 360
+
+springdoc:
+  api-docs:
+    enabled: true
