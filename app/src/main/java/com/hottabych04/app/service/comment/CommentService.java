@@ -53,7 +53,6 @@ public class CommentService {
                 .build();
 
         Comment newComment = commentRepository.save(comment);
-
         return commentMapper.toCommentGetDto(newComment);
     }
 

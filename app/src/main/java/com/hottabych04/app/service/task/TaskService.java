@@ -9,6 +9,8 @@ import com.hottabych04.app.database.entity.Status;
 import com.hottabych04.app.database.entity.Task;
 import com.hottabych04.app.database.entity.User;
 import com.hottabych04.app.database.repository.TaskRepository;
+import com.hottabych04.app.exception.priority.PriorityPermissionDeniedException;
+import com.hottabych04.app.exception.status.StatusPermissionDeniedException;
 import com.hottabych04.app.exception.task.TaskNotFoundException;
 import com.hottabych04.app.service.priority.PriorityService;
 import com.hottabych04.app.service.security.AuthorizationUtil;
@@ -42,7 +44,9 @@ public class TaskService {
 
     public TaskGetDto createTask(TaskCreateDto taskDto, Authentication authentication){
         Task task = Task.builder()
-                .name(taskDto.name())
+                .name(
+                        taskDto.name()
+                )
                 .status(
                         statusService.getStatus(taskDto.status())
                 )
@@ -74,21 +78,8 @@ public class TaskService {
     }
 
     public TaskGetDto getTask(Long id){
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Task by id: " + id + " is not found");
-                    return new TaskNotFoundException(id.toString());
-                });
-
+        Task task = getTaskEntity(id);
         return taskMapper.toTaskGetDto(task);
-    }
-
-    public Task getTaskEntity(Long id) {
-        return taskRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Task by id: " + id + " is not found");
-                    return new TaskNotFoundException(id.toString());
-                });
     }
 
     public Page<TaskGetDto> handleGetRequest(String author, String performer, Integer page, Integer size){
@@ -106,21 +97,21 @@ public class TaskService {
         return getTasks(request);
     }
 
-    public Page<TaskGetDto> getTaskByAuthor(String email, Pageable request){
+    private Page<TaskGetDto> getTaskByAuthor(String email, Pageable request){
         User author = userService.getUserEntity(email);
         Page<Task> tasks = taskRepository.findByAuthor(author, request);
 
         return tasks.map(taskMapper::toTaskGetDto);
     }
 
-    public Page<TaskGetDto> getTasksByPerformer(String email, Pageable request){
+    private Page<TaskGetDto> getTasksByPerformer(String email, Pageable request){
         User performer = userService.getUserEntity(email);
         Page<Task> tasks = taskRepository.findByPerformersContains(performer, request);
 
         return tasks.map(taskMapper::toTaskGetDto);
     }
 
-    public Page<TaskGetDto> getTasks(Pageable request){
+    private Page<TaskGetDto> getTasks(Pageable request){
         Page<Task> tasks = taskRepository.findAll(request);
         return tasks.map(taskMapper::toTaskGetDto);
     }
@@ -136,14 +127,11 @@ public class TaskService {
             task.setStatus(newStatus);
 
             Task updatedTask = taskRepository.save(task);
-
             return taskMapper.toTaskGetDto(updatedTask);
         }
 
         log.error("User: " + userEmail + " dont update status in task: " + taskId);
-        throw new AccessDeniedException("User dont have access to update this task");
-
-
+        throw new StatusPermissionDeniedException();
     }
 
     public TaskGetDto updateTaskPriority(Long taskId, PriorityDto priorityDto, Authentication authentication){
@@ -162,7 +150,15 @@ public class TaskService {
         }
 
         log.error("User: " + userEmail + " dont update priority in task: " + taskId);
-        throw new AccessDeniedException("User dont have access to update this task");
+        throw new PriorityPermissionDeniedException();
+    }
+
+    public Task getTaskEntity(Long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Task by id: " + id + " is not found");
+                    return new TaskNotFoundException(id.toString());
+                });
     }
 
     public void delete(Long id){

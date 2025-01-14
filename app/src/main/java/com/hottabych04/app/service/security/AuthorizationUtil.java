@@ -17,10 +17,6 @@ public class AuthorizationUtil {
         return hasRole(authentication, "ADMIN");
     }
 
-    public boolean isUser(Authentication authentication){
-        return hasRole(authentication, "USER");
-    }
-
     public boolean hasRole(Authentication authentication, String roleWithoutPrefix){
         var role = roleWithPrefix(roleWithoutPrefix);
 

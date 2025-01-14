@@ -26,10 +26,6 @@ public class RoleService {
                 );
     }
 
-    public boolean isExist(String role){
-        return roleRepository.existsByName(roleWithPrefix(role));
-    }
-
     private String roleWithPrefix(String roleWithoutPrefix){
         return ROLE_PREFIX + roleWithoutPrefix;
     }

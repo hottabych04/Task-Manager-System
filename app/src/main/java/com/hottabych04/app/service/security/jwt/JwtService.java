@@ -3,6 +3,7 @@ package com.hottabych04.app.service.security.jwt;
 import com.hottabych04.app.controller.jwt.payload.LoginRequest;
 import com.hottabych04.app.database.entity.DeactivatedToken;
 import com.hottabych04.app.database.repository.DeactivatedTokenRepository;
+import com.hottabych04.app.exception.token.RefreshTokenException;
 import com.hottabych04.app.service.security.jwt.entity.RefreshedAccessToken;
 import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.hottabych04.app.service.security.jwt.entity.TokenUser;
@@ -13,7 +14,6 @@ import com.hottabych04.app.service.security.jwt.serializer.AccessTokenJwsSeriali
 import com.hottabych04.app.service.security.jwt.serializer.RefreshTokenJweSerializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -46,21 +46,17 @@ public class JwtService {
                 )
         );
 
-        if (!(authentication instanceof PreAuthenticatedAuthenticationToken)){
-            Token refreshToken = refreshTokenFactory.apply(authentication);
-            Token accessToken = accessTokenFactory.apply(refreshToken);
+        Token refreshToken = refreshTokenFactory.apply(authentication);
+        Token accessToken = accessTokenFactory.apply(refreshToken);
 
-            var tokens = new Tokens(
-                    this.accessTokenJwsSerializer.apply(accessToken),
-                    accessToken.expiredAt().toString(),
-                    this.refreshTokenJweSerializer.apply(refreshToken),
-                    refreshToken.expiredAt().toString()
-            );
+        var tokens = new Tokens(
+                this.accessTokenJwsSerializer.apply(accessToken),
+                accessToken.expiredAt().toString(),
+                this.refreshTokenJweSerializer.apply(refreshToken),
+                refreshToken.expiredAt().toString()
+        );
 
-            return tokens;
-        }
-
-        throw new AccessDeniedException("User must be authenticated without jwt tokens");
+        return tokens;
     }
 
     public RefreshedAccessToken refreshToken(Authentication authentication){
@@ -77,7 +73,7 @@ public class JwtService {
             return refreshedAccessToken;
         }
 
-        throw new AccessDeniedException("User must be authenticated with refresh JWT token");
+        throw new RefreshTokenException();
     }
 
     public void logoutToken(Authentication authentication) {
@@ -97,6 +93,6 @@ public class JwtService {
             return;
         }
 
-        throw new AccessDeniedException("User must be authenticated with refresh JWT token");
+        throw new RefreshTokenException();
     }
 }

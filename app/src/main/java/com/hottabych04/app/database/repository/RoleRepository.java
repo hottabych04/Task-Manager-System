@@ -9,6 +9,4 @@ public interface RoleRepository extends JpaRepository<Role, Integer> {
 
     Optional<Role> getRoleByName(String name);
 
-    boolean existsByName(String name);
-
 }

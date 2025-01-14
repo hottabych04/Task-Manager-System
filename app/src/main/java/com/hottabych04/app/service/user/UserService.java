@@ -36,7 +36,6 @@ public class UserService {
 
     public UserGetDto createUser(UserCreateDto user){
         if (!isExist(user.email())){
-
             var encodedPassword = passwordEncoder.encode(user.password());
 
             User newUser = User.builder()
@@ -48,7 +47,6 @@ public class UserService {
                     .build();
 
             User savedUser = userRepository.save(newUser);
-
             return userMapper.toUserGetDto(savedUser);
         }
 
@@ -68,9 +66,34 @@ public class UserService {
 
     public Page<UserGetDto> getUsers(Integer page, Integer size) {
         PageRequest request = PageRequest.of(page, size);
-        Page<User> userPage = userRepository.findAll(request);
 
+        Page<User> userPage = userRepository.findAll(request);
         return userPage.map(userMapper::toUserGetDto);
+    }
+
+    public UserGetDto updateAdminRole(Long id){
+        User user = getUserEntity(id);
+        Role admin = roleService.getRole("ADMIN");
+
+        if (!user.getRoles().contains(admin)){
+            user.getRoles().add(admin);
+
+            User updatedUser = userRepository.save(user);
+            return userMapper.toUserGetDto(updatedUser);
+        }
+
+        log.error("Admin role is exists for user: " + user.getEmail());
+        throw new RoleExistException(user.getEmail());
+    }
+
+    public UserGetDto deleteAdminRole(Long id){
+        User user = getUserEntity(id);
+        Role admin = roleService.getRole("ADMIN");
+
+        user.getRoles().remove(admin);
+
+        User updatedUser = userRepository.save(user);
+        return userMapper.toUserGetDto(updatedUser);
     }
 
     public User getUserEntity(String email){
@@ -89,33 +112,8 @@ public class UserService {
                 });
     }
 
-    public UserGetDto updateAdminRole(Long id){
-        User user = getUserEntity(id);
-        Role admin = roleService.getRole("ADMIN");
-
-        if (user.getRoles().contains(admin)){
-            log.error("Admin role is exists for user: " + user.getEmail());
-            throw new RoleExistException(user.getEmail());
-        }
-        user.getRoles().add(admin);
-
-        User updatedUser = userRepository.save(user);
-        return userMapper.toUserGetDto(updatedUser);
-    }
-
-    public UserGetDto deleteAdminRole(Long id){
-        User user = getUserEntity(id);
-        Role admin = roleService.getRole("ADMIN");
-
-        user.getRoles().remove(admin);
-
-        User updatedUser = userRepository.save(user);
-        return userMapper.toUserGetDto(updatedUser);
-    }
-
     public void deleteUser(Authentication authentication){
         String email = authentication.getName();
-
         userRepository.deleteByEmail(email);
     }
 
