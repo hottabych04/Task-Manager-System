@@ -24,7 +24,7 @@ VALUES ('HIGH');
 
 --changeset hottabych04:13
 INSERT INTO t_user(c_email, c_hashed_password)
-VALUES ('admin@example.com', '$2a$12$BuYhqqxi2V6lSi8WAOwwy.qDMWek3z4Edffn7e4zbAbzfJv5EAweG');
+VALUES ('admin@example.com', '$2a$10$ZFl3cyW6HNhFTEsgbiXs1eY7wdJjjheBz0sC7R0OZ92AWQMNfMAX2');
 
 --changeset hottabych04:14
 INSERT INTO t_role_to_user(id_user, id_role)
