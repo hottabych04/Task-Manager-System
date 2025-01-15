@@ -55,11 +55,12 @@ public class PerformerService {
                     return new TaskNotFoundException(id.toString());
                 });
 
-        if (!task.getPerformers().remove(performer)){
-            log.error("Performer: " + performer.getEmail() + " not fond in task: " + task.getId());
-            throw new PerformerNotFoundException(performer.getEmail());
+        if (task.getPerformers().remove(performer)){
+            Task saved = taskRepository.save(task);
+            return taskMapper.toTaskGetDto(saved);
         }
 
-        return taskMapper.toTaskGetDto(task);
+        log.error("Performer: " + performer.getEmail() + " not fond in task: " + task.getId());
+        throw new PerformerNotFoundException(performer.getEmail());
     }
 }

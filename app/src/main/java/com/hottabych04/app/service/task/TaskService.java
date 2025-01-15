@@ -134,23 +134,14 @@ public class TaskService {
         throw new StatusPermissionDeniedException();
     }
 
-    public TaskGetDto updateTaskPriority(Long taskId, PriorityDto priorityDto, Authentication authentication){
+    public TaskGetDto updateTaskPriority(Long taskId, PriorityDto priorityDto){
         Priority newPriority = priorityService.getPriority(priorityDto.priority());
         Task task = getTaskEntity(taskId);
 
-        String userEmail = authentication.getName();
-        if (authorizationUtil.isAdmin(authentication) ||
-                task.getPerformers().stream().anyMatch(it -> it.getEmail().equals(userEmail))
-        ){
-            task.setPriority(newPriority);
+        task.setPriority(newPriority);
 
-            Task updatedTask = taskRepository.save(task);
-
-            return taskMapper.toTaskGetDto(updatedTask);
-        }
-
-        log.error("User: " + userEmail + " dont update priority in task: " + taskId);
-        throw new PriorityPermissionDeniedException();
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toTaskGetDto(updatedTask);
     }
 
     public Task getTaskEntity(Long id) {

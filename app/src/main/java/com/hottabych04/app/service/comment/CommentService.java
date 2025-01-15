@@ -40,20 +40,20 @@ public class CommentService {
         Task task = taskService.getTaskEntity(commentCreateDto.task());
         User author = userService.getUserEntity(authentication.getName());
 
-        if (!authorizationUtil.isAdmin(authentication) && !task.getPerformers().contains(author)){
-            log.error("User: " + author.getEmail() + " dont have access to the task: " + task.getId());
-            throw new AccessDeniedException("User: " + author.getEmail() + " dont have access to the task: " + task.getId());
+        if (authorizationUtil.isAdmin(authentication) || task.getPerformers().contains(author)){
+            Comment comment = Comment.builder()
+                    .message(commentCreateDto.message())
+                    .author(author)
+                    .task(task)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+
+            Comment newComment = commentRepository.save(comment);
+            return commentMapper.toCommentGetDto(newComment);
         }
 
-        Comment comment = Comment.builder()
-                .message(commentCreateDto.message())
-                .author(author)
-                .task(task)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        Comment newComment = commentRepository.save(comment);
-        return commentMapper.toCommentGetDto(newComment);
+        log.error("User: " + author.getEmail() + " dont have access to the task: " + task.getId());
+        throw new AccessDeniedException("User: " + author.getEmail() + " dont have access to the task: " + task.getId());
     }
 
     public CommentGetDto getComment(Long id, Authentication authentication){
