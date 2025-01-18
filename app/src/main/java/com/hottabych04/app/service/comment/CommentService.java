@@ -7,6 +7,7 @@ import com.hottabych04.app.database.entity.Task;
 import com.hottabych04.app.database.entity.User;
 import com.hottabych04.app.database.repository.CommentRepository;
 import com.hottabych04.app.exception.comment.CommentNotFoundException;
+import com.hottabych04.app.exception.comment.CommentPermissionException;
 import com.hottabych04.app.service.comment.mapper.CommentMapper;
 import com.hottabych04.app.service.security.AuthorizationUtil;
 import com.hottabych04.app.service.task.TaskService;
@@ -53,7 +54,7 @@ public class CommentService {
         }
 
         log.error("User: " + author.getEmail() + " dont have access to the task: " + task.getId());
-        throw new AccessDeniedException("User: " + author.getEmail() + " dont have access to the task: " + task.getId());
+        throw new CommentPermissionException();
     }
 
     public CommentGetDto getComment(Long id, Authentication authentication){
@@ -77,7 +78,7 @@ public class CommentService {
         }
 
         log.error("User: " + user.getEmail() + " dont have access to the task: " + task.getId());
-        throw new AccessDeniedException("User: " + user.getEmail() + " dont have access to the task: " + task.getId());
+        throw new CommentPermissionException();
     }
 
     public Page<CommentGetDto> getComments(Long taskId, Integer page, Integer size, Authentication authentication){
@@ -92,7 +93,7 @@ public class CommentService {
         }
 
         log.error("User: " + user.getEmail() + " dont have access to the task: " + task.getId());
-        throw new AccessDeniedException("User: " + user.getEmail() + " dont have access to the task: " + task.getId());
+        throw new CommentPermissionException();
     }
 
     public void delete(Long id, Authentication authentication){
@@ -110,6 +111,6 @@ public class CommentService {
         }
 
         log.error("User: " + userEmail + " dont have delete permissions to the comment: " + comment.getId());
-        throw new AccessDeniedException("User: " + userEmail + " dont have delete permissions to the task: " + comment.getId());
+        throw new CommentPermissionException();
     }
 }
