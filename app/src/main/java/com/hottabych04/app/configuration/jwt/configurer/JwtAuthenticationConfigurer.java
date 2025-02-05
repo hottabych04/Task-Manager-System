@@ -26,8 +26,7 @@ public class JwtAuthenticationConfigurer extends AbstractHttpConfigurer<JwtAuthe
     private final AccessTokenJwsDeserializer accessTokenJwsDeserializer;
     private final RefreshTokenJweDeserializer refreshTokenJweDeserializer;
 
-    private final UserRepository userRepository;
-    private final DeactivatedTokenRepository deactivatedTokenRepository;
+    private final TokenAuthenticationUserDetailsService tokenAuthenticationUserDetailsService;
 
     @Override
     public void init(HttpSecurity builder) throws Exception {
@@ -40,9 +39,7 @@ public class JwtAuthenticationConfigurer extends AbstractHttpConfigurer<JwtAuthe
     @Override
     public void configure(HttpSecurity builder) throws Exception {
         var authenticationProvider = new PreAuthenticatedAuthenticationProvider();
-        authenticationProvider.setPreAuthenticatedUserDetailsService(
-                new TokenAuthenticationUserDetailsService(this.deactivatedTokenRepository, this.userRepository)
-        );
+        authenticationProvider.setPreAuthenticatedUserDetailsService(tokenAuthenticationUserDetailsService);
 
         var jwtAuthenticationFilter = new AuthenticationFilter(
                 new ProviderManager(authenticationProvider),
