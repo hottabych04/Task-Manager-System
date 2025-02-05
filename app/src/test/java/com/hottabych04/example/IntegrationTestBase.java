@@ -1,4 +1,4 @@
-package com.hottabych04.example.service.security.jwt;
+package com.hottabych04.example;
 
 import com.hottabych04.app.Application;
 import liquibase.Contexts;
@@ -8,7 +8,6 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.DirectoryResourceAccessor;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;

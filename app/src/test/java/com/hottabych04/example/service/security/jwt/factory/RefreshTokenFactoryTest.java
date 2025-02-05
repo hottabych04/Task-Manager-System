@@ -2,7 +2,7 @@ package com.hottabych04.example.service.security.jwt.factory;
 
 import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.hottabych04.app.service.security.jwt.factory.RefreshTokenFactory;
-import com.hottabych04.example.service.security.jwt.IntegrationTestBase;
+import com.hottabych04.example.IntegrationTestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
