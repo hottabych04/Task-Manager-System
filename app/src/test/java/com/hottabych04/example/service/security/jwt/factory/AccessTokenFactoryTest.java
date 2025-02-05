@@ -1,13 +1,12 @@
 package com.hottabych04.example.service.security.jwt.factory;
 
-import com.hottabych04.app.Application;
 import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.hottabych04.app.service.security.jwt.factory.AccessTokenFactory;
+import com.hottabych04.example.service.security.jwt.IntegrationTestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -16,8 +15,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = Application.class)
-public class AccessTokenFactoryTest {
+public class AccessTokenFactoryTest extends IntegrationTestBase {
 
     @Autowired
     private AccessTokenFactory accessTokenFactory;

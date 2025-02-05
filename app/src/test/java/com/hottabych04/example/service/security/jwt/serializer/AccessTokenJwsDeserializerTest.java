@@ -1,12 +1,11 @@
 package com.hottabych04.example.service.security.jwt.serializer;
 
-import com.hottabych04.app.Application;
 import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.hottabych04.app.service.security.jwt.serializer.AccessTokenJwsDeserializer;
+import com.hottabych04.example.service.security.jwt.IntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -15,8 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = Application.class)
-public class AccessTokenJwsDeserializerTest {
+public class AccessTokenJwsDeserializerTest extends IntegrationTestBase {
 
     @Autowired
     private AccessTokenJwsDeserializer accessTokenJwsDeserializer;

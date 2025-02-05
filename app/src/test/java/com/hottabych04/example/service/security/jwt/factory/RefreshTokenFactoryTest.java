@@ -1,13 +1,12 @@
 package com.hottabych04.example.service.security.jwt.factory;
 
-import com.hottabych04.app.Application;
 import com.hottabych04.app.service.security.jwt.entity.Token;
 import com.hottabych04.app.service.security.jwt.factory.RefreshTokenFactory;
+import com.hottabych04.example.service.security.jwt.IntegrationTestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
@@ -16,8 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = Application.class)
-public class RefreshTokenFactoryTest {
+public class RefreshTokenFactoryTest extends IntegrationTestBase {
 
     @Autowired
     private RefreshTokenFactory refreshTokenFactory;
