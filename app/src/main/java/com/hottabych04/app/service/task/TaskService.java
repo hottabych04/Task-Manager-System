@@ -56,7 +56,7 @@ public class TaskService {
                 .build();
 
         if (taskDto.description() != null){
-            task.setDescription(task.getDescription());
+            task.setDescription(taskDto.description());
         }
 
         if (taskDto.priority() != null){
@@ -82,36 +82,27 @@ public class TaskService {
         return taskMapper.toTaskGetDto(task);
     }
 
-    public Page<TaskGetDto> handleGetRequest(String author, String performer, Integer page, Integer size){
-
+    public Page<TaskGetDto> getTasksByAuthor(String email, Integer page, Integer size){
         PageRequest request = PageRequest.of(page, size);
 
-        if (author != null){
-            return getTaskByAuthor(author, request);
-        }
-
-        if (performer != null) {
-            return getTasksByPerformer(performer, request);
-        }
-
-        return getTasks(request);
-    }
-
-    private Page<TaskGetDto> getTaskByAuthor(String email, Pageable request){
         User author = userService.getUserEntity(email);
         Page<Task> tasks = taskRepository.findByAuthor(author, request);
 
         return tasks.map(taskMapper::toTaskGetDto);
     }
 
-    private Page<TaskGetDto> getTasksByPerformer(String email, Pageable request){
+    public Page<TaskGetDto> getTasksByPerformer(String email, Integer page, Integer size){
+        PageRequest request = PageRequest.of(page, size);
+
         User performer = userService.getUserEntity(email);
         Page<Task> tasks = taskRepository.findByPerformersContains(performer, request);
 
         return tasks.map(taskMapper::toTaskGetDto);
     }
 
-    private Page<TaskGetDto> getTasks(Pageable request){
+    public Page<TaskGetDto> getTasks(Integer page, Integer size){
+        PageRequest request = PageRequest.of(page, size);
+
         Page<Task> tasks = taskRepository.findAll(request);
         return tasks.map(taskMapper::toTaskGetDto);
     }

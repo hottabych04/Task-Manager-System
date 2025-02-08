@@ -98,7 +98,16 @@ public class TaskController {
             @Parameter(description = "Размер страницы")
             @RequestParam(value = "size", defaultValue = "5") Integer size
     ){
-        return taskService.handleGetRequest(author, performer, page, size);
+
+        if (author != null){
+            return taskService.getTasksByAuthor(author, page, size);
+        }
+
+        if (performer != null) {
+            return taskService.getTasksByPerformer(performer, page, size);
+        }
+
+        return taskService.getTasks(page, size);
     }
 
     @Operation(summary = "Добавление исполнителей",

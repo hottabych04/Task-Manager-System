@@ -42,7 +42,7 @@ public class PerformerService {
         return taskMapper.toTaskGetDto(task);
     }
 
-    public void addPerformer(Task task, String email){
+    private void addPerformer(Task task, String email){
         User performer = userService.getUserEntity(email);
         task.getPerformers().add(performer);
     }
