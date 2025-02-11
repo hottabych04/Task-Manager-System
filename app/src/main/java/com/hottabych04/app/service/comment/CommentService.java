@@ -58,9 +58,8 @@ public class CommentService {
     }
 
     public CommentGetDto getComment(Long id, Authentication authentication){
-        return commentMapper.toCommentGetDto(
-                getCommentEntity(id,authentication)
-        );
+        Comment comment = getCommentEntity(id, authentication);
+        return commentMapper.toCommentGetDto(comment);
     }
 
     public Comment getCommentEntity(Long id, Authentication authentication){
