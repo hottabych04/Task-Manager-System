@@ -29,4 +29,19 @@ test {
 
 jacocoTestReport {
     dependsOn test
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "**/configuration/*",
+                    "**/payload/*",
+                    "**/database/*",
+                    "**/exception/*",
+                    "**/service/security/user/*",
+                    "**/service/security/jwt/converter/*",
+                    "**/service/security/jwt/detail/*",
+                    "**/service/security/jwt/entity/*"
+            ])
+        }))
+    }
 }
