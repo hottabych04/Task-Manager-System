@@ -1,37 +1,46 @@
 package com.hottabych04.app.service.status;
 
 import com.hottabych04.app.database.entity.Status;
+import com.hottabych04.app.database.repository.StatusRepository;
 import com.hottabych04.app.exception.status.StatusNotFoundException;
-import com.hottabych04.app.IntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StatusServiceTest extends IntegrationTestBase {
+public class StatusServiceTest {
 
-    @Autowired
-    private StatusService statusService;
+    private StatusRepository statusRepository = Mockito.mock(StatusRepository.class);
+
+    private StatusService statusService = new StatusService(statusRepository);
 
     @Test
     @DisplayName("Success get status")
     public void successGetStatus() {
         String waitStatus = "WAIT";
 
+        Status dummyStatus = Status.builder()
+                .id(1)
+                .name(waitStatus)
+                .build();
+
+        Mockito.when(statusRepository.findByName(waitStatus)).thenReturn(Optional.of(dummyStatus));
+
         Status status = statusService.getStatus(waitStatus);
 
-        assertAll(() -> {
-            assertThat(status).isNotNull();
-            assertThat(status.getName()).isEqualTo(waitStatus);
-        });
+        assertThat(status).isEqualTo(dummyStatus);
     }
 
     @Test
     @DisplayName("Failed get status")
     public void failedGetStatus(){
         String dummy = "dummy";
+
+        Mockito.when(statusRepository.findByName(dummy)).thenReturn(Optional.empty());
 
         assertThrows(StatusNotFoundException.class, () -> statusService.getStatus(dummy));
     }

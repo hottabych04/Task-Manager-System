@@ -17,12 +17,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserMapperTest extends IntegrationTestBase {
+public class UserMapperTest {
 
-    @Mock
-    private RoleMapper roleMapper;
-    @InjectMocks
-    private UserMapperImpl userMapper;
+    private RoleMapper roleMapper = Mockito.mock(RoleMapper.class);
+    private UserMapper userMapper = new UserMapperImpl(roleMapper);
 
     @Test
     @DisplayName("Success map from user entity to user dto")

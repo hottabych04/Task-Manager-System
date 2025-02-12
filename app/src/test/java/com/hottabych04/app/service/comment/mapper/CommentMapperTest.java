@@ -7,11 +7,8 @@ import com.hottabych04.app.database.entity.Task;
 import com.hottabych04.app.database.entity.User;
 import com.hottabych04.app.service.task.mapper.TaskMapper;
 import com.hottabych04.app.service.user.mapper.UserMapper;
-import com.hottabych04.app.IntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
@@ -19,19 +16,15 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CommentMapperTest extends IntegrationTestBase {
+public class CommentMapperTest {
 
     private static final String DUMMY_EMAIL = "dummy@example.com";
     private static final String DUMMY = "dummy";
 
-    @Mock
-    private TaskMapper taskMapper;
+    private TaskMapper taskMapper = Mockito.mock(TaskMapper.class);
+    private UserMapper userMapper = Mockito.mock(UserMapper.class);
 
-    @Mock
-    private UserMapper userMapper;
-
-    @InjectMocks
-    private CommentMapperImpl commentMapper;
+    private CommentMapper commentMapper = new CommentMapperImpl(taskMapper, userMapper);
 
     @Test
     @DisplayName("Success map from comment entity to CommentGetDto")

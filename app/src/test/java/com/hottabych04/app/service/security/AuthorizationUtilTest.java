@@ -1,20 +1,17 @@
 package com.hottabych04.app.service.security;
 
-import com.hottabych04.app.IntegrationTestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import java.util.List;
 
-public class AuthorizationUtilTest extends IntegrationTestBase {
+public class AuthorizationUtilTest {
 
-    @Autowired
-    private AuthorizationUtil authorizationUtil;
+    private AuthorizationUtil authorizationUtil = new AuthorizationUtil();
 
     @Test
     @DisplayName("Successful verification for admin")

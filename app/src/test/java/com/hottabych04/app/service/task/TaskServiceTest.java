@@ -35,26 +35,26 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskServiceTest extends IntegrationTestBase {
+public class TaskServiceTest {
 
     private static final String DUMMY_EMAIL = "dummy@example.com";
     private static final String DUMMY = "dummy";
 
-    @Mock
-    private TaskRepository taskRepository;
-    @Mock
-    private TaskMapper taskMapper;
-    @Mock
-    private StatusService statusService;
-    @Mock
-    private PriorityService priorityService;
-    @Mock
-    private UserService userService;
-    @Mock
-    private AuthorizationUtil authorizationUtil;
+    private TaskRepository taskRepository = Mockito.mock(TaskRepository.class);
+    private TaskMapper taskMapper = Mockito.mock(TaskMapper.class);
+    private StatusService statusService = Mockito.mock(StatusService.class);
+    private PriorityService priorityService = Mockito.mock(PriorityService.class);
+    private UserService userService = Mockito.mock(UserService.class);
+    private AuthorizationUtil authorizationUtil = Mockito.mock(AuthorizationUtil.class);
 
-    @InjectMocks
-    private TaskService taskService;
+    private TaskService taskService = new TaskService(
+            taskRepository,
+            taskMapper,
+            statusService,
+            priorityService,
+            userService,
+            authorizationUtil
+    );
 
     @Test
     @DisplayName("Success create new task")

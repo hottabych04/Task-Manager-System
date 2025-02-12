@@ -22,20 +22,20 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PerformerServiceTest extends IntegrationTestBase {
+public class PerformerServiceTest {
 
     private static final String DUMMY_EMAIL = "dummy@example.com";
     private static final String DUMMY = "dummy";
 
-    @Mock
-    private TaskRepository taskRepository;
-    @Mock
-    private TaskMapper taskMapper;
-    @Mock
-    private UserService userService;
+    private TaskRepository taskRepository = Mockito.mock(TaskRepository.class);
+    private TaskMapper taskMapper = Mockito.mock(TaskMapper.class);
+    private UserService userService = Mockito.mock(UserService.class);
 
-    @InjectMocks
-    private PerformerService performerService;
+    private PerformerService performerService = new PerformerService(
+            taskRepository,
+            taskMapper,
+            userService
+    );
 
     @Test
     @DisplayName("Success add performers to task")

@@ -14,10 +14,11 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccessTokenFactoryTest extends IntegrationTestBase {
+public class AccessTokenFactoryTest {
 
-    @Autowired
-    private AccessTokenFactory accessTokenFactory;
+    private Duration tokenTtl = Duration.ofMinutes(10L);
+
+    private AccessTokenFactory accessTokenFactory = new AccessTokenFactory(tokenTtl);
 
     @Test
     @DisplayName("Success access token create from refresh token")

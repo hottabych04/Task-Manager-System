@@ -25,18 +25,19 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserServiceTest extends IntegrationTestBase {
+public class UserServiceTest {
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
-    private UserRepository userRepository;
-    @Mock
-    private UserMapper userMapper;
-    @Mock
-    private RoleService roleService;
-    @InjectMocks
-    private UserService userService;
+    private PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+    private UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private UserMapper userMapper = Mockito.mock(UserMapper.class);
+    private RoleService roleService = Mockito.mock(RoleService.class);
+
+    private UserService userService = new UserService(
+            passwordEncoder,
+            userRepository,
+            userMapper,
+            roleService
+    );
 
     @Test
     @DisplayName("Success create user")

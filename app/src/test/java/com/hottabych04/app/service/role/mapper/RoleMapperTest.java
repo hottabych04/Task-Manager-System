@@ -1,22 +1,19 @@
 package com.hottabych04.app.service.role.mapper;
 
 import com.hottabych04.app.database.entity.Role;
-import com.hottabych04.app.IntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RoleMapperTest extends IntegrationTestBase {
+public class RoleMapperTest {
 
     private static final String ROLE_PREFIX = "ROLE_";
 
-    @Autowired
-    private RoleMapper roleMapper;
+    private RoleMapper roleMapper = new RoleMapperImpl();
 
     @Test
     @DisplayName("Success map role entity to string")

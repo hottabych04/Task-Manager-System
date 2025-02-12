@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RefreshTokenJweDeserializerTest extends IntegrationTestBase {
+public class RefreshTokenJweDeserializerIT extends IntegrationTestBase {
 
     @Autowired
     private RefreshTokenJweDeserializer refreshTokenJweDeserializer;

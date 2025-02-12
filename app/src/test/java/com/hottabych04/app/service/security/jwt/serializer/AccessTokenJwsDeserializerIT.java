@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccessTokenJwsDeserializerTest extends IntegrationTestBase {
+public class AccessTokenJwsDeserializerIT extends IntegrationTestBase {
 
     @Autowired
     private AccessTokenJwsDeserializer accessTokenJwsDeserializer;

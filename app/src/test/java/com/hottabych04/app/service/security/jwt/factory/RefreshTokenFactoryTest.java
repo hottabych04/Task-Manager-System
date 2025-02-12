@@ -10,14 +10,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
+import java.time.Duration;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RefreshTokenFactoryTest extends IntegrationTestBase {
+public class RefreshTokenFactoryTest {
 
-    @Autowired
-    private RefreshTokenFactory refreshTokenFactory;
+    private Duration tokenTtl = Duration.ofMinutes(10L);
+
+    private RefreshTokenFactory refreshTokenFactory = new RefreshTokenFactory(tokenTtl);
 
     @Test
     @DisplayName("Success refresh token create from authentication")

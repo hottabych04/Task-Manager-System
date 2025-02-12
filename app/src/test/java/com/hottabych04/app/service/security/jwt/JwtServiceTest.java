@@ -29,23 +29,23 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JwtServiceTest extends IntegrationTestBase {
+public class JwtServiceTest {
 
-    @Mock
-    private AuthenticationManager authenticationManager;
-    @Mock
-    private AccessTokenFactory accessTokenFactory;
-    @Mock
-    private AccessTokenJwsSerializer accessTokenJwsSerializer;
-    @Mock
-    private RefreshTokenFactory refreshTokenFactory;
-    @Mock
-    private RefreshTokenJweSerializer refreshTokenJweSerializer;
-    @Mock
-    private DeactivatedTokenRepository deactivatedTokenRepository;
+    private AuthenticationManager authenticationManager = Mockito.mock(AuthenticationManager.class);
+    private AccessTokenFactory accessTokenFactory = Mockito.mock(AccessTokenFactory.class);
+    private AccessTokenJwsSerializer accessTokenJwsSerializer = Mockito.mock(AccessTokenJwsSerializer.class);
+    private RefreshTokenFactory refreshTokenFactory = Mockito.mock(RefreshTokenFactory.class);
+    private RefreshTokenJweSerializer refreshTokenJweSerializer = Mockito.mock(RefreshTokenJweSerializer.class);
+    private DeactivatedTokenRepository deactivatedTokenRepository = Mockito.mock(DeactivatedTokenRepository.class);
 
-    @InjectMocks
-    private JwtService jwtService;
+    private JwtService jwtService = new JwtService(
+            authenticationManager,
+            accessTokenJwsSerializer,
+            refreshTokenJweSerializer,
+            accessTokenFactory,
+            refreshTokenFactory,
+            deactivatedTokenRepository
+    );
 
     @Test
     @DisplayName("Success create jwt tokens")

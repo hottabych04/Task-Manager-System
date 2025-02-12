@@ -13,10 +13,8 @@ import com.hottabych04.app.service.comment.mapper.CommentMapper;
 import com.hottabych04.app.service.security.AuthorizationUtil;
 import com.hottabych04.app.service.task.TaskService;
 import com.hottabych04.app.service.user.UserService;
-import com.hottabych04.app.IntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -31,24 +29,25 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CommentServiceTest extends IntegrationTestBase {
+public class CommentServiceTest {
 
     private static final String DUMMY_EMAIL = "dummy@example.com";
     private static final String DUMMY = "dummy";
 
     @Mock
-    private CommentRepository commentRepository;
-    @Mock
-    private CommentMapper commentMapper;
-    @Mock
-    private UserService userService;
-    @Mock
-    private TaskService taskService;
-    @Mock
-    private AuthorizationUtil authorizationUtil;
+    private CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
+    private CommentMapper commentMapper = Mockito.mock(CommentMapper.class);
+    private UserService userService = Mockito.mock(UserService.class);
+    private TaskService taskService = Mockito.mock(TaskService.class);
+    private AuthorizationUtil authorizationUtil = Mockito.mock(AuthorizationUtil.class);
 
-    @InjectMocks
-    private CommentService commentService;
+    private CommentService commentService = new CommentService(
+            commentRepository,
+            commentMapper,
+            userService,
+            taskService,
+            authorizationUtil
+    );
 
     @Test
     @DisplayName("Success comment create for admin/author")

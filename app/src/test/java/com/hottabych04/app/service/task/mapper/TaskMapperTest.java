@@ -21,19 +21,15 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskMapperTest extends IntegrationTestBase {
+public class TaskMapperTest {
 
     private static final String DUMMY = "dummy";
 
-    @Mock
-    private StatusMapper statusMapper;
-    @Mock
-    private PriorityMapper priorityMapper;
-    @Mock
-    private UserMapper userMapper;
+    private UserMapper userMapper = Mockito.mock(UserMapper.class);
+    private PriorityMapper priorityMapper = Mockito.mock(PriorityMapper.class);
+    private StatusMapper statusMapper = Mockito.mock(StatusMapper.class);
 
-    @InjectMocks
-    private TaskMapperImpl taskMapper;
+    private TaskMapper taskMapper = new TaskMapperImpl(userMapper, priorityMapper, statusMapper);
 
     @Test
     @DisplayName("Map Task entity to TaskGetDto")

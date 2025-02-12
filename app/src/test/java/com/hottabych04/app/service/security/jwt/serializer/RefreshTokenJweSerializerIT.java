@@ -13,28 +13,27 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccessTokenJwsSerializerTest extends IntegrationTestBase {
+public class RefreshTokenJweSerializerIT extends IntegrationTestBase {
 
     @Autowired
-    private AccessTokenJwsSerializer accessTokenJwsSerializer;
+    private RefreshTokenJweSerializer refreshTokenJweSerializer;
 
     @Test
-    @DisplayName("Success serialize access token to JWT")
-    public void successSerializeAccessToken(){
-        Token accessToken = new Token(
+    @DisplayName("Success serialize refresh token to JWT")
+    public void successSerializeRefreshToken(){
+        Token refreshToken = new Token(
                 UUID.randomUUID(),
                 "login@example.com",
                 List.of(
-                        "ROLE_ADMIN"
+                        "JWT_REFRESH",
+                        "JWT_LOGOUT",
+                        "GRAND_ROLE_ADMIN"
                 ),
                 Instant.now(),
-                Instant.now().plus(Duration.ofMinutes(1L))
+                Instant.now().plus(Duration.ofHours(6L))
         );
 
-        String serializedAccessToken = accessTokenJwsSerializer.apply(accessToken);
-        assertThat(serializedAccessToken).isNotNull().isNotEmpty();
-
-        String[] split = serializedAccessToken.split("\\.");
-        assertThat(split.length).isEqualTo(3);
+        String serializedRefreshToken = refreshTokenJweSerializer.apply(refreshToken);
+        assertThat(serializedRefreshToken).isNotNull().isNotEmpty();
     }
 }
